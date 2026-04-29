@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Goals – FitTrack</title>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:499"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><a href="../index.html" class="nav-logo"><i class="fas fa-bolt"></i><span>FitTrack</span></a></div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Main</div>
+        <a href="dashboard.html" class="sidebar-link"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+        <a href="activity.html" class="sidebar-link"><i class="fas fa-chart-line"></i><span>Activity</span></a>
+        <a href="workout-log.html" class="sidebar-link"><i class="fas fa-dumbbell"></i><span>Workout Log</span></a>
+        <a href="workout-planner.html" class="sidebar-link"><i class="fas fa-calendar-week"></i><span>Planner</span></a>
+        <a href="nutrition.html" class="sidebar-link"><i class="fas fa-apple-alt"></i><span>Nutrition</span></a>
+        <a href="goals.html" class="sidebar-link active"><i class="fas fa-bullseye"></i><span>Goals</span></a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Explore</div>
+        <a href="exercise-library.html" class="sidebar-link"><i class="fas fa-book-open"></i><span>Exercise Library</span></a>
+        <a href="blog.html" class="sidebar-link"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+        <a href="membership.html" class="sidebar-link"><i class="fas fa-crown"></i><span>Membership</span></a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Account</div>
+        <a href="profile.html" class="sidebar-link"><i class="fas fa-user-circle"></i><span>Profile</span></a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.5rem;border-radius:10px;background:var(--bg-card2);margin-bottom:.75rem">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff" id="sidebarUserAvatar">A</div>
+        <div style="overflow:hidden;flex:1"><div style="font-size:.85rem;font-weight:700" id="sidebarUserName">User</div><div style="font-size:.7rem;color:var(--text-muted)" id="sidebarUserEmail"></div></div>
+      </div>
+      <button class="btn btn-outline btn-sm" style="width:100%;justify-content:center" data-logout><i class="fas fa-sign-out-alt"></i><span> Logout</span></button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="dashboard-header">
+      <div style="display:flex;align-items:center;gap:1rem">
+        <button id="menuToggle" style="background:none;border:none;color:var(--text-secondary);font-size:1.2rem;cursor:pointer;padding:.4rem;border-radius:8px"><i class="fas fa-bars"></i></button>
+        <div><div class="page-title">Goals</div><div class="page-subtitle">Set, track and crush your fitness goals</div></div>
+      </div>
+      <button class="btn btn-primary" data-modal-target="addGoalModal"><i class="fas fa-plus"></i> Add Goal</button>
+    </header>
+
+    <div class="dashboard-content">
+      <!-- Overview -->
+      <div class="stats-grid">
+        <div class="stat-card green"><div class="stat-info"><div class="stat-label">Total Goals</div><div class="stat-value" id="totalGoals">0</div><div class="stat-change up">Active</div></div><div class="stat-icon green"><i class="fas fa-bullseye"></i></div></div>
+        <div class="stat-card orange"><div class="stat-info"><div class="stat-label">Completed</div><div class="stat-value" id="completedGoals">0</div><div class="stat-change up">100% reached</div></div><div class="stat-icon orange"><i class="fas fa-trophy"></i></div></div>
+        <div class="stat-card blue"><div class="stat-info"><div class="stat-label">Avg Progress</div><div class="stat-value" id="avgProgress">0%</div><div class="stat-change up">Overall</div></div><div class="stat-icon blue"><i class="fas fa-chart-line"></i></div></div>
+        <div class="stat-card purple"><div class="stat-info"><div class="stat-label">Streak Days</div><div class="stat-value">7</div><div class="stat-change up">Current streak</div></div><div class="stat-icon purple"><i class="fas fa-fire"></i></div></div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div>
+          <!-- Goals List -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="widget-title"><i class="fas fa-list-check"></i> All Goals</div>
+              <div class="period-tabs">
+                <button class="period-tab active" data-filter="all">All</button>
+                <button class="period-tab" data-filter="daily">Daily</button>
+                <button class="period-tab" data-filter="weekly">Weekly</button>
+                <button class="period-tab" data-filter="monthly">Monthly</button>
+              </div>
+            </div>
+            <div id="goalsList">
+              <div class="empty-state"><i class="fas fa-bullseye"></i><h3>No goals yet</h3><p>Create your first goal to start tracking progress.</p><button class="btn btn-primary btn-sm" data-modal-target="addGoalModal">Add Goal</button></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <!-- Progress chart -->
+          <div class="widget-card">
+            <div class="widget-header"><div class="widget-title"><i class="fas fa-chart-pie"></i> Goal Overview</div></div>
+            <div class="chart-container" style="height:200px"><canvas id="goalsChart"></canvas></div>
+          </div>
+
+          <!-- Quick suggestions -->
+          <div class="widget-card">
+            <div class="widget-header"><div class="widget-title"><i class="fas fa-lightbulb"></i> Quick Add Goals</div></div>
+            <div style="display:flex;flex-direction:column;gap:.65rem" id="quickGoals">
+              <button class="btn btn-ghost" style="justify-content:flex-start;text-align:left" onclick="quickAdd('Daily Steps','10000','steps','daily','#00d4aa')"><i class="fas fa-shoe-prints" style="color:var(--primary);width:20px"></i> 10,000 Daily Steps</button>
+              <button class="btn btn-ghost" style="justify-content:flex-start;text-align:left" onclick="quickAdd('Calories Burned','800','kcal','daily','#ff6b35')"><i class="fas fa-fire-alt" style="color:var(--secondary);width:20px"></i> 800 Calories/Day</button>
+              <button class="btn btn-ghost" style="justify-content:flex-start;text-align:left" onclick="quickAdd('Weekly Workouts','5','sessions','weekly','#5b8cff')"><i class="fas fa-dumbbell" style="color:var(--blue);width:20px"></i> 5 Workouts/Week</button>
+              <button class="btn btn-ghost" style="justify-content:flex-start;text-align:left" onclick="quickAdd('Water Intake','8','glasses','daily','#14b8a6')"><i class="fas fa-glass-water" style="color:var(--teal);width:20px"></i> 8 Glasses Water/Day</button>
+              <button class="btn btn-ghost" style="justify-content:flex-start;text-align:left" onclick="quickAdd('Protein Goal','150','g','daily','#8b5cf6')"><i class="fas fa-drumstick-bite" style="color:var(--purple);width:20px"></i> 150g Protein/Day</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Add Goal Modal -->
+  <div class="modal-overlay" id="addGoalModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="goalModalTitle">Add Goal</h3>
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="goalForm" novalidate>
+        <input type="hidden" id="editGoalId" />
+        <div class="form-group">
+          <label for="goalName">Goal Name *</label>
+          <input type="text" id="goalName" class="form-control" placeholder="e.g. Daily Steps" /><span class="form-error"></span>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="goalTarget">Target *</label>
+            <input type="number" id="goalTarget" class="form-control" placeholder="10000" min="1" /><span class="form-error"></span>
+          </div>
+          <div class="form-group">
+            <label for="goalCurrent">Current</label>
+            <input type="number" id="goalCurrent" class="form-control" placeholder="0" min="0" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="goalUnit">Unit</label>
+            <input type="text" id="goalUnit" class="form-control" placeholder="steps, kg, reps..." />
+          </div>
+          <div class="form-group">
+            <label for="goalPeriod">Period</label>
+            <select id="goalPeriod" class="form-control">
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="goalColor">Color</label>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap" id="colorPicker">
+            <button type="button" class="color-dot active" data-color="#00d4aa" style="width:28px;height:28px;border-radius:50%;background:#00d4aa;border:2px solid transparent;cursor:pointer"></button>
+            <button type="button" class="color-dot" data-color="#ff6b35" style="width:28px;height:28px;border-radius:50%;background:#ff6b35;border:2px solid transparent;cursor:pointer"></button>
+            <button type="button" class="color-dot" data-color="#5b8cff" style="width:28px;height:28px;border-radius:50%;background:#5b8cff;border:2px solid transparent;cursor:pointer"></button>
+            <button type="button" class="color-dot" data-color="#8b5cf6" style="width:28px;height:28px;border-radius:50%;background:#8b5cf6;border:2px solid transparent;cursor:pointer"></button>
+            <button type="button" class="color-dot" data-color="#f59e0b" style="width:28px;height:28px;border-radius:50%;background:#f59e0b;border:2px solid transparent;cursor:pointer"></button>
+            <button type="button" class="color-dot" data-color="#14b8a6" style="width:28px;height:28px;border-radius:50%;background:#14b8a6;border:2px solid transparent;cursor:pointer"></button>
+          </div>
+          <input type="hidden" id="goalColor" value="#00d4aa" />
+        </div>
+        <div style="display:flex;gap:.75rem;justify-content:flex-end">
+          <button type="button" class="btn btn-ghost" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Goal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    requireAuth();
+    const user = Auth.getCurrentUser();
+    const userId = user?.id;
+    let activeFilter = 'all';
+    let goalsChart = null;
+
+    function getGoals(){ return Storage.get(STORAGE_KEYS.GOALS,[]).filter(g=>g.userId===userId); }
+
+    // Color picker
+    document.querySelectorAll('.color-dot').forEach(dot=>{
+      dot.addEventListener('click',function(){
+        document.querySelectorAll('.color-dot').forEach(d=>d.style.border='2px solid transparent');
+        this.style.border='2px solid #fff';
+        this.classList.add('active');
+        document.getElementById('goalColor').value=this.dataset.color;
+      });
+    });
+
+    window.quickAdd=function(name,target,unit,period,color){
+      document.getElementById('goalName').value=name;
+      document.getElementById('goalTarget').value=target;
+      document.getElementById('goalCurrent').value=0;
+      document.getElementById('goalUnit').value=unit;
+      document.getElementById('goalPeriod').value=period;
+      document.getElementById('goalColor').value=color;
+      document.querySelectorAll('.color-dot').forEach(d=>{ d.style.border=d.dataset.color===color?'2px solid #fff':'2px solid transparent'; });
+      Modal.show('addGoalModal');
+    };
+
+    window.editGoal=function(id){
+      const g=getGoals().find(x=>String(x.id)===String(id));
+      if(!g) return;
+      document.getElementById('goalModalTitle').textContent='Edit Goal';
+      document.getElementById('editGoalId').value=g.id;
+      document.getElementById('goalName').value=g.name;
+      document.getElementById('goalTarget').value=g.target;
+      document.getElementById('goalCurrent').value=g.current;
+      document.getElementById('goalUnit').value=g.unit;
+      document.getElementById('goalPeriod').value=g.period;
+      document.getElementById('goalColor').value=g.color||'#00d4aa';
+      Modal.show('addGoalModal');
+    };
+
+    window.deleteGoal=function(id){
+      if(!confirm('Delete this goal?')) return;
+      const all=Storage.get(STORAGE_KEYS.GOALS,[]);
+      Storage.set(STORAGE_KEYS.GOALS,all.filter(x=>String(x.id)!==String(id)));
+      Toast.success('Goal deleted.'); renderPage();
+    };
+
+    window.updateProgress=function(id,val){
+      const all=Storage.get(STORAGE_KEYS.GOALS,[]);
+      const g=all.find(x=>String(x.id)===String(id));
+      if(g){ g.current=Math.max(0,parseFloat(val)||0); Storage.set(STORAGE_KEYS.GOALS,all); renderPage(); }
+    };
+
+    function renderPage(){
+      const goals=getGoals();
+      const filtered=activeFilter==='all'?goals:goals.filter(g=>g.period===activeFilter);
+      document.getElementById('totalGoals').textContent=goals.length;
+      const completed=goals.filter(g=>(g.current/g.target)>=1).length;
+      document.getElementById('completedGoals').textContent=completed;
+      const avg=goals.length?Math.round(goals.reduce((s,g)=>s+Math.min((g.current/g.target)*100,100),0)/goals.length):0;
+      document.getElementById('avgProgress').textContent=avg+'%';
+
+      const el=document.getElementById('goalsList');
+      if(!filtered.length){
+        el.innerHTML='<div class="empty-state"><i class="fas fa-bullseye"></i><h3>No goals found</h3><p>Add a goal to track your progress.</p></div>'; 
+      } else {
+        el.innerHTML=filtered.map(g=>{
+          const pct=Math.min(Math.round((g.current/g.target)*100),100);
+          const done=pct>=100;
+          return `<div style="padding:1.25rem;background:var(--bg-card2);border-radius:12px;margin-bottom:.85rem;border:1px solid ${done?g.color:'var(--border)'}">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.85rem">
+              <div>
+                <div style="font-size:.95rem;font-weight:700;display:flex;align-items:center;gap:.5rem">
+                  ${done?'<i class="fas fa-check-circle" style="color:'+g.color+'"></i>':''} ${g.name}
+                  <span class="badge" style="background:${g.color}22;color:${g.color}">${g.period}</span>
+                </div>
+                <div style="font-size:.8rem;color:var(--text-muted);margin-top:.15rem">${g.current} / ${g.target} ${g.unit}</div>
+              </div>
+              <div style="display:flex;gap:.4rem">
+                <button class="btn btn-ghost btn-icon" onclick="editGoal('${g.id}')" title="Edit"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-icon" style="background:rgba(239,68,68,.1);color:var(--red);border:none" onclick="deleteGoal('${g.id}')" title="Delete"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem">
+              <div class="progress-bar" style="flex:1"><div class="progress-fill" data-width="${pct}%" style="background:${g.color};width:0"></div></div>
+              <div style="font-size:.9rem;font-weight:800;color:${g.color};min-width:38px;text-align:right">${pct}%</div>
+            </div>
+            <div style="margin-top:.75rem;display:flex;gap:.5rem;align-items:center">
+              <span style="font-size:.78rem;color:var(--text-muted)">Update:</span>
+              <input type="number" value="${g.current}" min="0" max="${g.target*2}" style="padding:.25rem .5rem;background:var(--bg-dark);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);width:80px;font-size:.82rem" onchange="updateProgress('${g.id}',this.value)" />
+              <span style="font-size:.78rem;color:var(--text-muted)">${g.unit}</span>
+            </div>
+          </div>`;
+        }).join('');
+        animateProgressBars();
+      }
+
+      // Chart
+      if(goalsChart) goalsChart.destroy();
+      if(goals.length){
+        const done=goals.filter(g=>(g.current/g.target)>=1).length;
+        const inprog=goals.filter(g=>(g.current/g.target)>0&&(g.current/g.target)<1).length;
+        const notStarted=goals.filter(g=>g.current===0).length;
+        goalsChart=new Chart(document.getElementById('goalsChart'),{type:'doughnut',data:{labels:['Completed','In Progress','Not Started'],datasets:[{data:[done,inprog,notStarted],backgroundColor:['#00d4aa','#5b8cff','rgba(255,255,255,0.1)'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',padding:10,font:{size:11}}}}}});
+      }
+    }
+
+    // Filter tabs
+    document.querySelectorAll('[data-filter]').forEach(btn=>{
+      btn.addEventListener('click',function(){
+        document.querySelectorAll('[data-filter]').forEach(b=>b.classList.remove('active'));
+        this.classList.add('active');
+        activeFilter=this.dataset.filter;
+        renderPage();
+      });
+    });
+
+    document.getElementById('goalForm').addEventListener('submit',function(e){
+      e.preventDefault();
+      if(!Validator.validateForm(this,{goalName:[Validator.rules.required],goalTarget:[Validator.rules.required]})) return;
+      const editId=document.getElementById('editGoalId').value;
+      const entry={id:editId||Date.now(),userId,name:document.getElementById('goalName').value.trim(),target:parseFloat(document.getElementById('goalTarget').value)||0,current:parseFloat(document.getElementById('goalCurrent').value)||0,unit:document.getElementById('goalUnit').value.trim()||'units',period:document.getElementById('goalPeriod').value,color:document.getElementById('goalColor').value||'#00d4aa'};
+      const all=Storage.get(STORAGE_KEYS.GOALS,[]);
+      if(editId){ const i=all.findIndex(x=>String(x.id)===String(editId)); if(i!==-1) all[i]=entry; } else { all.push(entry); }
+      Storage.set(STORAGE_KEYS.GOALS,all);
+      Toast.success(editId?'Goal updated!':'Goal added!'); Modal.hide('addGoalModal'); this.reset();
+      document.getElementById('editGoalId').value=''; document.getElementById('goalModalTitle').textContent='Add Goal'; document.getElementById('goalColor').value='#00d4aa';
+      document.querySelectorAll('.color-dot').forEach((d,i)=>d.style.border=i===0?'2px solid #fff':'2px solid transparent');
+      renderPage();
+    });
+
+    document.querySelector('[data-modal-target="addGoalModal"]').addEventListener('click',()=>{
+      document.getElementById('goalModalTitle').textContent='Add Goal'; document.getElementById('editGoalId').value=''; document.getElementById('goalForm').reset(); document.getElementById('goalColor').value='#00d4aa';
+    });
+
+    renderPage();
+  </script>
+</body>
+</html>

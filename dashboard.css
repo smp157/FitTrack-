@@ -1,0 +1,341 @@
+/* ============================================
+   FitTrack - Dashboard Page Styles
+   ============================================ */
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.page-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+.welcome-banner {
+  background: linear-gradient(135deg, rgba(0,212,170,0.12), rgba(91,140,255,0.12));
+  border: 1px solid rgba(0,212,170,0.2);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.welcome-text h2 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.welcome-text p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.welcome-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+.widget-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.widget-title {
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.widget-title i {
+  color: var(--primary);
+}
+
+.widget-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.period-tabs {
+  display: flex;
+  background: var(--bg-card2);
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.period-tab {
+  padding: 0.35rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  background: none;
+}
+
+.period-tab.active {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* ---- Upcoming Workouts ---- */
+.workout-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.workout-item:last-child { border-bottom: none; }
+
+.workout-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+  background: rgba(0,212,170,0.12);
+  color: var(--primary);
+}
+
+.workout-info { flex: 1; }
+.workout-info strong {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+}
+
+.workout-info span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.workout-time {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+/* ---- Nutrition Summary ---- */
+.macro-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.macro-item {
+  text-align: center;
+  background: var(--bg-card2);
+  border-radius: 10px;
+  padding: 0.75rem;
+}
+
+.macro-item .macro-value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+
+.macro-item .macro-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.macro-item.calories .macro-value { color: var(--secondary); }
+.macro-item.protein .macro-value { color: var(--blue); }
+.macro-item.carbs .macro-value { color: var(--yellow); }
+.macro-item.fat .macro-value { color: var(--purple); }
+
+.water-tracker {
+  background: var(--bg-card2);
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.water-glasses {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.glass-icon {
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: var(--transition);
+  opacity: 0.3;
+}
+
+.glass-icon.filled {
+  opacity: 1;
+  color: var(--blue);
+}
+
+/* ---- Goals Widget ---- */
+.goal-item {
+  margin-bottom: 1.1rem;
+}
+
+.goal-item:last-child { margin-bottom: 0; }
+
+.goal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.goal-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.goal-progress-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* ---- Activity Ring ---- */
+.activity-ring-container {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.5rem 0;
+}
+
+.activity-ring {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+}
+
+.activity-ring svg {
+  transform: rotate(-90deg);
+}
+
+.ring-bg {
+  fill: none;
+  stroke: var(--bg-card2);
+  stroke-width: 10;
+}
+
+.ring-fill {
+  fill: none;
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.5s ease;
+}
+
+.ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.ring-center small {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.ring-legend {
+  flex: 1;
+}
+
+.ring-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.82rem;
+}
+
+.ring-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ring-legend-item span {
+  flex: 1;
+  color: var(--text-secondary);
+}
+
+.ring-legend-item strong {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .macro-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .welcome-banner { flex-direction: column; }
+  .welcome-actions { flex-wrap: wrap; }
+  .quick-stats { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .macro-grid { grid-template-columns: repeat(2, 1fr); }
+}

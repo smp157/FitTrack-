@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workout Planner – FitTrack</title>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .planner-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:.75rem; }
+    .day-col { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:.85rem; min-height:200px; }
+    .day-col.today { border-color:rgba(0,212,170,.4); background:rgba(0,212,170,.04); }
+    .day-header { font-size:.8rem; font-weight:700; text-align:center; margin-bottom:.75rem; }
+    .day-date { font-size:1.5rem; font-weight:900; text-align:center; margin-bottom:.5rem; }
+    .day-date.today-num { color:var(--primary); }
+    .planner-item { background:var(--bg-card2); border-radius:8px; padding:.55rem .75rem; margin-bottom:.5rem; font-size:.78rem; font-weight:600; cursor:pointer; border-left:3px solid var(--primary); display:flex; align-items:center; justify-content:space-between; gap:.3rem; }
+    .planner-item .item-del { background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:.7rem; padding:.1rem .2rem; border-radius:4px; opacity:.5; }
+    .planner-item:hover .item-del { opacity:1; color:var(--red); }
+    .add-day-btn { width:100%; background:none; border:1px dashed var(--border); border-radius:8px; padding:.5rem; color:var(--text-muted); font-size:.78rem; cursor:pointer; transition:var(--transition); margin-top:.5rem; }
+    .add-day-btn:hover { border-color:var(--primary); color:var(--primary); }
+    @media(max-width:900px) { .planner-grid { grid-template-columns:repeat(4,1fr); } }
+    @media(max-width:600px) { .planner-grid { grid-template-columns:repeat(2,1fr); } }
+  </style>
+</head>
+<body>
+  <div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:499"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><a href="../index.html" class="nav-logo"><i class="fas fa-bolt"></i><span>FitTrack</span></a></div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Main</div>
+        <a href="dashboard.html" class="sidebar-link"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+        <a href="activity.html" class="sidebar-link"><i class="fas fa-chart-line"></i><span>Activity</span></a>
+        <a href="workout-log.html" class="sidebar-link"><i class="fas fa-dumbbell"></i><span>Workout Log</span></a>
+        <a href="workout-planner.html" class="sidebar-link active"><i class="fas fa-calendar-week"></i><span>Planner</span></a>
+        <a href="nutrition.html" class="sidebar-link"><i class="fas fa-apple-alt"></i><span>Nutrition</span></a>
+        <a href="goals.html" class="sidebar-link"><i class="fas fa-bullseye"></i><span>Goals</span></a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Explore</div>
+        <a href="exercise-library.html" class="sidebar-link"><i class="fas fa-book-open"></i><span>Exercise Library</span></a>
+        <a href="blog.html" class="sidebar-link"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+        <a href="membership.html" class="sidebar-link"><i class="fas fa-crown"></i><span>Membership</span></a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Account</div>
+        <a href="profile.html" class="sidebar-link"><i class="fas fa-user-circle"></i><span>Profile</span></a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.5rem;border-radius:10px;background:var(--bg-card2);margin-bottom:.75rem">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff" id="sidebarUserAvatar">A</div>
+        <div style="overflow:hidden;flex:1"><div style="font-size:.85rem;font-weight:700" id="sidebarUserName">User</div><div style="font-size:.7rem;color:var(--text-muted)" id="sidebarUserEmail"></div></div>
+      </div>
+      <button class="btn btn-outline btn-sm" style="width:100%;justify-content:center" data-logout><i class="fas fa-sign-out-alt"></i><span> Logout</span></button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="dashboard-header">
+      <div style="display:flex;align-items:center;gap:1rem">
+        <button id="menuToggle" style="background:none;border:none;color:var(--text-secondary);font-size:1.2rem;cursor:pointer;padding:.4rem;border-radius:8px"><i class="fas fa-bars"></i></button>
+        <div>
+          <div class="page-title">Workout Planner</div>
+          <div class="page-subtitle" id="weekLabel">Loading week...</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:.75rem">
+        <button class="btn btn-ghost btn-sm" id="prevWeek"><i class="fas fa-chevron-left"></i></button>
+        <button class="btn btn-ghost btn-sm" id="todayBtn">Today</button>
+        <button class="btn btn-ghost btn-sm" id="nextWeek"><i class="fas fa-chevron-right"></i></button>
+        <button class="btn btn-primary" data-modal-target="addPlanModal"><i class="fas fa-plus"></i> Add Workout</button>
+      </div>
+    </header>
+
+    <div class="dashboard-content">
+      <!-- Templates -->
+      <div class="widget-card" style="margin-bottom:1.5rem">
+        <div class="widget-header"><div class="widget-title"><i class="fas fa-magic"></i> Quick Templates</div></div>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+          <button class="btn btn-ghost btn-sm" onclick="applyTemplate('push')"><i class="fas fa-dumbbell"></i> Push Day</button>
+          <button class="btn btn-ghost btn-sm" onclick="applyTemplate('pull')"><i class="fas fa-hand-paper"></i> Pull Day</button>
+          <button class="btn btn-ghost btn-sm" onclick="applyTemplate('legs')"><i class="fas fa-running"></i> Leg Day</button>
+          <button class="btn btn-ghost btn-sm" onclick="applyTemplate('cardio')"><i class="fas fa-heartbeat"></i> Cardio Day</button>
+          <button class="btn btn-ghost btn-sm" onclick="applyTemplate('rest')"><i class="fas fa-bed"></i> Rest Day</button>
+        </div>
+      </div>
+
+      <!-- Weekly Planner -->
+      <div class="planner-grid" id="plannerGrid"></div>
+
+      <!-- Upcoming Workouts List -->
+      <div class="widget-card" style="margin-top:1.5rem">
+        <div class="widget-header"><div class="widget-title"><i class="fas fa-list"></i> Upcoming Planned Workouts</div></div>
+        <div id="upcomingList"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Add Plan Modal -->
+  <div class="modal-overlay" id="addPlanModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Plan Workout</h3>
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="planForm" novalidate>
+        <input type="hidden" id="planDay" />
+        <div class="form-group">
+          <label for="planName">Workout Name *</label>
+          <input type="text" id="planName" class="form-control" placeholder="e.g. Upper Body Strength" list="workoutSuggestions" />
+          <datalist id="workoutSuggestions">
+            <option value="Upper Body Strength"><option value="Lower Body Strength"><option value="Push Day">
+            <option value="Pull Day"><option value="Leg Day"><option value="Cardio Run">
+            <option value="HIIT Circuit"><option value="Yoga & Stretch"><option value="Rest Day">
+          </datalist>
+          <span class="form-error"></span>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="planDate">Date *</label>
+            <input type="date" id="planDate" class="form-control" /><span class="form-error"></span>
+          </div>
+          <div class="form-group">
+            <label for="planTime">Time</label>
+            <input type="time" id="planTime" class="form-control" value="07:00" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="planDuration">Duration (min)</label>
+            <input type="number" id="planDuration" class="form-control" placeholder="60" min="5" />
+          </div>
+          <div class="form-group">
+            <label for="planType">Type</label>
+            <select id="planType" class="form-control">
+              <option value="Strength">Strength</option>
+              <option value="Cardio">Cardio</option>
+              <option value="HIIT">HIIT</option>
+              <option value="Flexibility">Flexibility</option>
+              <option value="Rest">Rest</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="planNotes">Notes</label>
+          <textarea id="planNotes" class="form-control" rows="2" placeholder="Exercises, goals for this session..."></textarea>
+        </div>
+        <div style="display:flex;gap:.75rem;justify-content:flex-end">
+          <button type="button" class="btn btn-ghost" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-calendar-plus"></i> Schedule</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    requireAuth();
+    const user = Auth.getCurrentUser();
+    const userId = user?.id;
+
+    const COLORS = { Strength:'#00d4aa', Cardio:'#ff6b35', HIIT:'#ef4444', Flexibility:'#8b5cf6', Rest:'#94a3b8' };
+    const TEMPLATES = {
+      push: [{name:'Bench Press',type:'Strength'},{name:'Shoulder Press',type:'Strength'},{name:'Tricep Dips',type:'Strength'}],
+      pull: [{name:'Pull-ups',type:'Strength'},{name:'Barbell Rows',type:'Strength'},{name:'Bicep Curls',type:'Strength'}],
+      legs: [{name:'Squats',type:'Strength'},{name:'Deadlift',type:'Strength'},{name:'Lunges',type:'Strength'}],
+      cardio: [{name:'Outdoor Run 5km',type:'Cardio'},{name:'Jump Rope',type:'HIIT'}],
+      rest: [{name:'Rest Day / Light Stretch',type:'Rest'}],
+    };
+
+    let weekOffset = 0;
+
+    function getWeekStart(offset=0) {
+      const d = new Date();
+      const day = d.getDay();
+      d.setDate(d.getDate() - day + 1 + offset * 7);
+      d.setHours(0,0,0,0);
+      return d;
+    }
+
+    function getPlanner() { return Storage.get(STORAGE_KEYS.PLANNER, []).filter(p=>p.userId===userId); }
+
+    function renderPlanner() {
+      const start = getWeekStart(weekOffset);
+      const end = new Date(start); end.setDate(end.getDate()+6);
+      const fmt = d=>d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+      document.getElementById('weekLabel').textContent = `${fmt(start)} – ${fmt(end)}`;
+
+      const today = DateUtils.today();
+      const planner = getPlanner();
+      const grid = document.getElementById('plannerGrid');
+      grid.innerHTML = '';
+
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(start); d.setDate(d.getDate()+i);
+        const dateStr = d.toISOString().split('T')[0];
+        const isToday = dateStr === today;
+        const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+        const items = planner.filter(p=>p.date===dateStr);
+
+        const col = document.createElement('div');
+        col.className = 'day-col' + (isToday?' today':'');
+        col.innerHTML = `
+          <div class="day-header" style="color:${isToday?'var(--primary)':'var(--text-muted)'}">${dayNames[i]}</div>
+          <div class="day-date${isToday?' today-num':''}">${d.getDate()}</div>
+          ${items.map(item=>`
+            <div class="planner-item" style="border-left-color:${COLORS[item.type]||'#00d4aa'}" title="${item.notes||''}">
+              <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${item.name}</span>
+              <button class="item-del" onclick="deletePlan('${item.id}')"><i class="fas fa-times"></i></button>
+            </div>
+          `).join('')}
+          <button class="add-day-btn" onclick="openPlanForDay('${dateStr}')"><i class="fas fa-plus"></i></button>
+        `;
+        grid.appendChild(col);
+      }
+
+      // Upcoming list
+      const upcoming = planner.filter(p=>p.date>=today).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+      const ul = document.getElementById('upcomingList');
+      ul.innerHTML = upcoming.length ? upcoming.map(p=>`
+        <div style="display:flex;align-items:center;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border)">
+          <div style="width:42px;height:42px;border-radius:12px;background:${COLORS[p.type]||'#00d4aa'}22;color:${COLORS[p.type]||'#00d4aa'};display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-dumbbell"></i></div>
+          <div style="flex:1"><div style="font-size:.9rem;font-weight:600">${p.name}</div><div style="font-size:.78rem;color:var(--text-muted)">${DateUtils.format(p.date)} ${p.time?'at '+p.time:''} ${p.duration?'• '+p.duration+' min':''}</div></div>
+          <span class="badge" style="background:${COLORS[p.type]||'#00d4aa'}22;color:${COLORS[p.type]||'#00d4aa'}">${p.type}</span>
+        </div>
+      `).join('') : '<div class="empty-state" style="padding:1.5rem"><i class="fas fa-calendar"></i><p>No upcoming planned workouts.</p></div>';
+    }
+
+    window.openPlanForDay = function(date) {
+      document.getElementById('planDate').value = date;
+      Modal.show('addPlanModal');
+    };
+
+    window.deletePlan = function(id) {
+      const all = Storage.get(STORAGE_KEYS.PLANNER,[]);
+      Storage.set(STORAGE_KEYS.PLANNER, all.filter(p=>String(p.id)!==String(id)));
+      Toast.success('Removed from planner.'); renderPlanner();
+    };
+
+    window.applyTemplate = function(key) {
+      const today = DateUtils.today();
+      const tpl = TEMPLATES[key];
+      const all = Storage.get(STORAGE_KEYS.PLANNER,[]);
+      tpl.forEach(t=>all.push({id:Date.now()+Math.random(),userId,date:today,name:t.name,type:t.type,time:'07:00',duration:45,notes:''}));
+      Storage.set(STORAGE_KEYS.PLANNER,all);
+      Toast.success('Template applied to today!'); renderPlanner();
+    };
+
+    document.getElementById('prevWeek').addEventListener('click',()=>{ weekOffset--; renderPlanner(); });
+    document.getElementById('nextWeek').addEventListener('click',()=>{ weekOffset++; renderPlanner(); });
+    document.getElementById('todayBtn').addEventListener('click',()=>{ weekOffset=0; renderPlanner(); });
+
+    document.getElementById('planDate').value = DateUtils.today();
+
+    document.getElementById('planForm').addEventListener('submit',function(e){
+      e.preventDefault();
+      if(!Validator.validateForm(this,{planName:[Validator.rules.required],planDate:[Validator.rules.required]})) return;
+      const all = Storage.get(STORAGE_KEYS.PLANNER,[]);
+      all.push({id:Date.now(),userId,name:document.getElementById('planName').value.trim(),date:document.getElementById('planDate').value,time:document.getElementById('planTime').value,duration:parseInt(document.getElementById('planDuration').value)||45,type:document.getElementById('planType').value,notes:document.getElementById('planNotes').value.trim()});
+      Storage.set(STORAGE_KEYS.PLANNER,all);
+      Toast.success('Workout scheduled!'); Modal.hide('addPlanModal'); this.reset();
+      document.getElementById('planDate').value = DateUtils.today(); renderPlanner();
+    });
+
+    renderPlanner();
+  </script>
+</body>
+</html>

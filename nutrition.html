@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nutrition Tracker – FitTrack</title>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:499"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="nav-logo"><i class="fas fa-bolt"></i><span>FitTrack</span></a>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Main</div>
+        <a href="dashboard.html" class="sidebar-link"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+        <a href="activity.html" class="sidebar-link"><i class="fas fa-chart-line"></i><span>Activity</span></a>
+        <a href="workout-log.html" class="sidebar-link"><i class="fas fa-dumbbell"></i><span>Workout Log</span></a>
+        <a href="workout-planner.html" class="sidebar-link"><i class="fas fa-calendar-week"></i><span>Planner</span></a>
+        <a href="nutrition.html" class="sidebar-link active"><i class="fas fa-apple-alt"></i><span>Nutrition</span></a>
+        <a href="goals.html" class="sidebar-link"><i class="fas fa-bullseye"></i><span>Goals</span></a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Explore</div>
+        <a href="exercise-library.html" class="sidebar-link"><i class="fas fa-book-open"></i><span>Exercise Library</span></a>
+        <a href="blog.html" class="sidebar-link"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+        <a href="membership.html" class="sidebar-link"><i class="fas fa-crown"></i><span>Membership</span></a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Account</div>
+        <a href="profile.html" class="sidebar-link"><i class="fas fa-user-circle"></i><span>Profile</span></a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.5rem;border-radius:10px;background:var(--bg-card2);margin-bottom:.75rem">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff" id="sidebarUserAvatar">A</div>
+        <div style="overflow:hidden;flex:1">
+          <div style="font-size:.85rem;font-weight:700" id="sidebarUserName">User</div>
+          <div style="font-size:.7rem;color:var(--text-muted)" id="sidebarUserEmail"></div>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-sm" style="width:100%;justify-content:center" data-logout>
+        <i class="fas fa-sign-out-alt"></i><span> Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="dashboard-header">
+      <div style="display:flex;align-items:center;gap:1rem">
+        <button id="menuToggle" style="background:none;border:none;color:var(--text-secondary);font-size:1.2rem;cursor:pointer;padding:.4rem;border-radius:8px"><i class="fas fa-bars"></i></button>
+        <div>
+          <div class="page-title">Nutrition Tracker</div>
+          <div class="page-subtitle">Monitor your daily macros and hydration</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:.75rem;align-items:center">
+        <input type="date" id="selectedDate" class="form-control" style="width:auto;padding:.4rem .75rem;font-size:.85rem" />
+        <button class="btn btn-primary" data-modal-target="addNutritionModal"><i class="fas fa-plus"></i> Log Meal</button>
+      </div>
+    </header>
+
+    <div class="dashboard-content">
+      <div class="stats-grid">
+        <div class="stat-card orange"><div class="stat-info"><div class="stat-label">Calories</div><div class="stat-value" id="todayCalories">0</div><div class="stat-change" style="color:var(--text-muted)">Goal: 2000 kcal</div></div><div class="stat-icon orange"><i class="fas fa-fire-alt"></i></div></div>
+        <div class="stat-card blue"><div class="stat-info"><div class="stat-label">Protein</div><div class="stat-value" id="todayProtein">0g</div><div class="stat-change" style="color:var(--text-muted)">Goal: 150g</div></div><div class="stat-icon blue"><i class="fas fa-drumstick-bite"></i></div></div>
+        <div class="stat-card"><div class="stat-info"><div class="stat-label">Carbs</div><div class="stat-value" id="todayCarbs" style="color:var(--yellow)">0g</div><div class="stat-change" style="color:var(--text-muted)">Goal: 250g</div></div><div class="stat-icon" style="background:rgba(245,158,11,.15);color:var(--yellow)"><i class="fas fa-bread-slice"></i></div></div>
+        <div class="stat-card purple"><div class="stat-info"><div class="stat-label">Fat</div><div class="stat-value" id="todayFat">0g</div><div class="stat-change" style="color:var(--text-muted)">Goal: 65g</div></div><div class="stat-icon purple"><i class="fas fa-tint"></i></div></div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div>
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="widget-title"><i class="fas fa-chart-pie"></i> Macro Breakdown</div>
+              <span id="dateLabel" style="font-size:.82rem;color:var(--text-muted)">Today</span>
+            </div>
+            <div style="margin-bottom:1.25rem">
+              <div style="margin-bottom:.85rem">
+                <div style="display:flex;justify-content:space-between;font-size:.85rem;font-weight:600;margin-bottom:.35rem"><span><i class="fas fa-fire-alt" style="color:var(--secondary)"></i> Calories</span><span id="calBar">0 / 2000 kcal</span></div>
+                <div class="progress-bar"><div class="progress-fill" id="calFill" data-width="0%" style="background:var(--secondary);width:0"></div></div>
+              </div>
+              <div style="margin-bottom:.85rem">
+                <div style="display:flex;justify-content:space-between;font-size:.85rem;font-weight:600;margin-bottom:.35rem"><span><i class="fas fa-drumstick-bite" style="color:var(--blue)"></i> Protein</span><span id="protBar">0 / 150g</span></div>
+                <div class="progress-bar"><div class="progress-fill" id="protFill" data-width="0%" style="background:var(--blue);width:0"></div></div>
+              </div>
+              <div style="margin-bottom:.85rem">
+                <div style="display:flex;justify-content:space-between;font-size:.85rem;font-weight:600;margin-bottom:.35rem"><span><i class="fas fa-bread-slice" style="color:var(--yellow)"></i> Carbs</span><span id="carbBar">0 / 250g</span></div>
+                <div class="progress-bar"><div class="progress-fill" id="carbFill" data-width="0%" style="background:var(--yellow);width:0"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:.85rem;font-weight:600;margin-bottom:.35rem"><span><i class="fas fa-tint" style="color:var(--purple)"></i> Fat</span><span id="fatBar">0 / 65g</span></div>
+                <div class="progress-bar"><div class="progress-fill" id="fatFill" data-width="0%" style="background:var(--purple);width:0"></div></div>
+              </div>
+            </div>
+            <div class="chart-container" style="height:180px"><canvas id="macroDonut"></canvas></div>
+          </div>
+          <div class="widget-card">
+            <div class="widget-header"><div class="widget-title"><i class="fas fa-chart-line"></i> 7-Day Calories</div></div>
+            <div class="chart-container" style="height:200px"><canvas id="weeklyCalChart"></canvas></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="widget-card">
+            <div class="widget-header"><div class="widget-title"><i class="fas fa-glass-water"></i> Water Intake</div></div>
+            <div style="text-align:center;margin-bottom:1rem">
+              <div style="font-size:3rem;font-weight:900;color:var(--blue)" id="waterDisplay">0</div>
+              <div style="color:var(--text-muted);font-size:.85rem">glasses of 8 today</div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-bottom:1rem" id="waterGridBig"></div>
+            <div style="display:flex;gap:.5rem">
+              <button class="btn btn-outline" style="flex:1;justify-content:center" id="removeWater"><i class="fas fa-minus"></i></button>
+              <button class="btn btn-primary" style="flex:1;justify-content:center" id="addWater"><i class="fas fa-plus"></i> Add Glass</button>
+            </div>
+          </div>
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="widget-title"><i class="fas fa-list"></i> Today's Entries</div>
+            </div>
+            <div id="nutritionEntries"></div>
+          </div>
+          <div class="widget-card">
+            <div class="widget-header"><div class="widget-title"><i class="fas fa-calendar-week"></i> Weekly Averages</div></div>
+            <div>
+              <div style="display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border)"><span style="color:var(--text-secondary);font-size:.88rem">Avg Calories</span><strong id="avgCalories">—</strong></div>
+              <div style="display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border)"><span style="color:var(--text-secondary);font-size:.88rem">Avg Protein</span><strong id="avgProtein">—</strong></div>
+              <div style="display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border)"><span style="color:var(--text-secondary);font-size:.88rem">Avg Carbs</span><strong id="avgCarbs">—</strong></div>
+              <div style="display:flex;justify-content:space-between;padding:.6rem 0"><span style="color:var(--text-secondary);font-size:.88rem">Avg Fat</span><strong id="avgFat">—</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Add Nutrition Modal -->
+  <div class="modal-overlay" id="addNutritionModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Log Nutrition Entry</h3>
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="nutritionForm" novalidate>
+        <div class="form-group">
+          <label for="mealName">Meal / Food Name</label>
+          <input type="text" id="mealName" class="form-control" placeholder="e.g. Grilled Chicken & Rice" />
+        </div>
+        <div class="form-group">
+          <label for="nutrDate">Date *</label>
+          <input type="date" id="nutrDate" class="form-control" /><span class="form-error"></span>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label for="nutrCalories">Calories (kcal) *</label><input type="number" id="nutrCalories" class="form-control" placeholder="500" min="0" /><span class="form-error"></span></div>
+          <div class="form-group"><label for="nutrProtein">Protein (g)</label><input type="number" id="nutrProtein" class="form-control" placeholder="30" min="0" step="0.1" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label for="nutrCarbs">Carbs (g)</label><input type="number" id="nutrCarbs" class="form-control" placeholder="60" min="0" step="0.1" /></div>
+          <div class="form-group"><label for="nutrFat">Fat (g)</label><input type="number" id="nutrFat" class="form-control" placeholder="15" min="0" step="0.1" /></div>
+        </div>
+        <div style="display:flex;gap:.75rem;justify-content:flex-end">
+          <button type="button" class="btn btn-ghost" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Entry</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    requireAuth();
+    const user = Auth.getCurrentUser();
+    const userId = user?.id;
+    const dateInput = document.getElementById('selectedDate');
+    dateInput.value = DateUtils.today();
+    document.getElementById('nutrDate').value = DateUtils.today();
+    const GOALS = { calories:2000, protein:150, carbs:250, fat:65 };
+    let macroChart=null, weekChart=null;
+
+    function getNutrition(){ return Storage.get(STORAGE_KEYS.NUTRITION,[]).filter(n=>n.userId===userId); }
+    function getForDate(d){ return getNutrition().filter(n=>n.date===d); }
+    function totals(entries){ return entries.reduce((a,e)=>({calories:a.calories+(e.calories||0),protein:a.protein+(e.protein||0),carbs:a.carbs+(e.carbs||0),fat:a.fat+(e.fat||0),water:e.water>a.water?e.water:a.water}),{calories:0,protein:0,carbs:0,fat:0,water:0}); }
+
+    function renderWater(n){
+      document.getElementById('waterDisplay').textContent=n;
+      let h='';
+      for(let i=0;i<8;i++) h+=`<div style="text-align:center;padding:.6rem;border-radius:10px;border:1.5px solid ${i<n?'var(--blue)':'var(--border)'};background:${i<n?'rgba(91,140,255,.12)':'var(--bg-card2)'};cursor:pointer" onclick="setWater(${i+1})"><i class="fas fa-glass-water" style="color:${i<n?'var(--blue)':'var(--text-muted)'}"></i></div>`;
+      document.getElementById('waterGridBig').innerHTML=h;
+    }
+
+    window.setWater=function(n){
+      const d=dateInput.value, all=Storage.get(STORAGE_KEYS.NUTRITION,[]);
+      const waterEntry=all.find(x=>x.userId===userId&&x.date===d&&x._waterOnly);
+      if(waterEntry){ waterEntry.water=n; } else { all.push({id:Date.now(),userId,date:d,calories:0,protein:0,carbs:0,fat:0,water:n,_waterOnly:true}); }
+      Storage.set(STORAGE_KEYS.NUTRITION,all); renderPage();
+    };
+
+    document.getElementById('addWater').addEventListener('click',()=>{ const t=totals(getForDate(dateInput.value)); setWater(Math.min((t.water||0)+1,8)); });
+    document.getElementById('removeWater').addEventListener('click',()=>{ const t=totals(getForDate(dateInput.value)); setWater(Math.max((t.water||0)-1,0)); });
+
+    window.deleteEntry=function(id){
+      if(!confirm('Delete this entry?')) return;
+      const all=Storage.get(STORAGE_KEYS.NUTRITION,[]);
+      Storage.set(STORAGE_KEYS.NUTRITION,all.filter(x=>String(x.id)!==String(id)));
+      Toast.success('Entry deleted.'); renderPage();
+    };
+
+    function renderPage(){
+      const d=dateInput.value;
+      const t=totals(getForDate(d));
+      const fmt=new Date(d+'T00:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+      document.getElementById('dateLabel').textContent=d===DateUtils.today()?'Today':fmt;
+      document.getElementById('todayCalories').textContent=t.calories;
+      document.getElementById('todayProtein').textContent=t.protein+'g';
+      document.getElementById('todayCarbs').textContent=t.carbs+'g';
+      document.getElementById('todayFat').textContent=t.fat+'g';
+      const cp=Math.min(Math.round(t.calories/GOALS.calories*100),100);
+      const pp=Math.min(Math.round(t.protein/GOALS.protein*100),100);
+      const crp=Math.min(Math.round(t.carbs/GOALS.carbs*100),100);
+      const fp=Math.min(Math.round(t.fat/GOALS.fat*100),100);
+      document.getElementById('calBar').textContent=`${t.calories} / ${GOALS.calories} kcal`;
+      document.getElementById('protBar').textContent=`${t.protein} / ${GOALS.protein}g`;
+      document.getElementById('carbBar').textContent=`${t.carbs} / ${GOALS.carbs}g`;
+      document.getElementById('fatBar').textContent=`${t.fat} / ${GOALS.fat}g`;
+      ['calFill','protFill','carbFill','fatFill'].forEach((id,i)=>{
+        const fills=[cp,pp,crp,fp];
+        document.getElementById(id).setAttribute('data-width',fills[i]+'%');
+      });
+      animateProgressBars();
+      if(macroChart) macroChart.destroy();
+      macroChart=new Chart(document.getElementById('macroDonut'),{type:'doughnut',data:{labels:['Protein','Carbs','Fat'],datasets:[{data:[t.protein*4,t.carbs*4,t.fat*9],backgroundColor:['#5b8cff','#f59e0b','#8b5cf6'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',padding:10,font:{size:11}}}}}});
+      renderWater(t.water||0);
+      const meals=getForDate(d).filter(e=>!e._waterOnly);
+      const entEl=document.getElementById('nutritionEntries');
+      entEl.innerHTML=meals.length?meals.map(e=>`<div style="display:flex;align-items:center;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border)"><div style="width:40px;height:40px;border-radius:10px;background:rgba(255,107,53,.12);color:var(--secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-utensils"></i></div><div style="flex:1"><div style="font-size:.9rem;font-weight:600">${e.mealName||'Meal'}</div><div style="font-size:.75rem;color:var(--text-muted)">${e.protein||0}g P · ${e.carbs||0}g C · ${e.fat||0}g F</div></div><div style="text-align:right"><div style="font-size:1rem;font-weight:800;color:var(--secondary)">${e.calories||0}</div><div style="font-size:.72rem;color:var(--text-muted)">kcal</div></div><button style="background:rgba(239,68,68,.1);color:var(--red);border:none;width:32px;height:32px;border-radius:8px;cursor:pointer" onclick="deleteEntry('${e.id}')"><i class="fas fa-trash"></i></button></div>`).join(''):'<div class="empty-state" style="padding:1.5rem"><i class="fas fa-utensils"></i><p>No meals logged yet.</p></div>';
+      const labels=[],calData=[];
+      for(let i=6;i>=0;i--){ const day=DateUtils.daysAgo(i); labels.push(DateUtils.dayOfWeek(day)); calData.push(totals(getForDate(day)).calories); }
+      if(weekChart) weekChart.destroy();
+      weekChart=new Chart(document.getElementById('weeklyCalChart'),{type:'line',data:{labels,datasets:[{data:calData,borderColor:'#ff6b35',backgroundColor:'rgba(255,107,53,0.1)',fill:true,tension:0.4,pointBackgroundColor:'#ff6b35',pointRadius:4},{data:new Array(7).fill(GOALS.calories),borderColor:'rgba(0,212,170,0.4)',borderDash:[6,3],fill:false,pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#64748b'}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#64748b'}}}}});
+      const avg=f=>Math.round(Array.from({length:7},(_,i)=>totals(getForDate(DateUtils.daysAgo(i)))[f]||0).reduce((a,b)=>a+b,0)/7);
+      document.getElementById('avgCalories').textContent=avg('calories')+' kcal';
+      document.getElementById('avgProtein').textContent=avg('protein')+'g';
+      document.getElementById('avgCarbs').textContent=avg('carbs')+'g';
+      document.getElementById('avgFat').textContent=avg('fat')+'g';
+    }
+
+    dateInput.addEventListener('change',()=>{ document.getElementById('nutrDate').value=dateInput.value; renderPage(); });
+
+    document.getElementById('nutritionForm').addEventListener('submit',function(e){
+      e.preventDefault();
+      if(!Validator.validateForm(this,{nutrDate:[Validator.rules.required],nutrCalories:[Validator.rules.required]})) return;
+      const all=Storage.get(STORAGE_KEYS.NUTRITION,[]);
+      all.push({id:Date.now(),userId,date:document.getElementById('nutrDate').value,mealName:document.getElementById('mealName').value.trim()||'Meal',calories:parseFloat(document.getElementById('nutrCalories').value)||0,protein:parseFloat(document.getElementById('nutrProtein').value)||0,carbs:parseFloat(document.getElementById('nutrCarbs').value)||0,fat:parseFloat(document.getElementById('nutrFat').value)||0});
+      Storage.set(STORAGE_KEYS.NUTRITION,all);
+      Toast.success('Meal logged!'); Modal.hide('addNutritionModal'); this.reset();
+      document.getElementById('nutrDate').value=dateInput.value; renderPage();
+    });
+
+    renderPage();
+  </script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Session – FitTrack</title>
+  <meta name="description" content="Book a fitness consultation or personal training session with a FitTrack certified coach." />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="inner-page">
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo"><i class="fas fa-bolt"></i><span>FitTrack</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="exercise-library.html">Exercises</a></li>
+        <li><a href="membership.html">Membership</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-outline" id="loginBtn">Login</a>
+        <a href="signup.html" class="btn btn-primary">Get Started</a>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-tag">Booking</span>
+      <h1>Book a <span class="gradient-text">Session</span></h1>
+      <p>Schedule a 1-on-1 fitness consultation or personal training session with a certified FitTrack coach.</p>
+    </div>
+  </section>
+
+  <section class="booking-section">
+    <div class="container">
+      <div class="booking-grid">
+        <!-- Services + Form -->
+        <div>
+          <h3 style="font-size:1.15rem;font-weight:700;margin-bottom:1rem">Select a Service</h3>
+          <div class="service-cards" id="serviceCards">
+            <div class="service-card selected" data-service="Fitness Consultation" onclick="selectService(this)">
+              <i class="fas fa-comments"></i>
+              <div>
+                <h4>Fitness Consultation</h4>
+                <p>30-minute goal-setting and program design session · Free</p>
+              </div>
+            </div>
+            <div class="service-card" data-service="Personal Training Session" onclick="selectService(this)">
+              <i class="fas fa-dumbbell"></i>
+              <div>
+                <h4>Personal Training Session</h4>
+                <p>60-minute 1-on-1 coaching with a certified trainer · $60</p>
+              </div>
+            </div>
+            <div class="service-card" data-service="Nutrition Coaching" onclick="selectService(this)">
+              <i class="fas fa-apple-alt"></i>
+              <div>
+                <h4>Nutrition Coaching</h4>
+                <p>45-minute custom meal planning and macro setup · $45</p>
+              </div>
+            </div>
+            <div class="service-card" data-service="Program Design" onclick="selectService(this)">
+              <i class="fas fa-clipboard-list"></i>
+              <div>
+                <h4>Program Design</h4>
+                <p>Custom 12-week training program created for your goals · $80</p>
+              </div>
+            </div>
+            <div class="service-card" data-service="Online Group Class" onclick="selectService(this)">
+              <i class="fas fa-users"></i>
+              <div>
+                <h4>Online Group Class</h4>
+                <p>Live virtual workout class with up to 10 participants · $15</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Booking Form -->
+          <div class="card" style="padding:2rem;margin-top:1.5rem">
+            <h3 style="font-size:1.15rem;font-weight:700;margin-bottom:1.5rem"><i class="fas fa-calendar-check" style="color:var(--primary)"></i> Booking Details</h3>
+
+            <div id="bookingSuccess" style="display:none;padding:1.5rem;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);border-radius:12px;text-align:center;margin-bottom:1.5rem">
+              <i class="fas fa-check-circle" style="font-size:2.5rem;color:var(--primary);display:block;margin-bottom:.75rem"></i>
+              <h4 style="font-weight:800;margin-bottom:.5rem">Booking Confirmed! 🎉</h4>
+              <p style="color:var(--text-secondary);font-size:.9rem;margin-bottom:1rem">We've received your booking request. A confirmation email will be sent within 30 minutes.</p>
+              <div id="bookingDetails" style="background:var(--bg-card);border-radius:10px;padding:1rem;text-align:left;font-size:.875rem"></div>
+              <button class="btn btn-outline btn-sm" style="margin-top:1rem" onclick="resetBooking()">Book Another Session</button>
+            </div>
+
+            <form id="bookingForm" novalidate>
+              <input type="hidden" id="selectedService" value="Fitness Consultation" />
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="bookName">Full Name *</label>
+                  <input type="text" id="bookName" class="form-control" placeholder="Your name" /><span class="form-error"></span>
+                </div>
+                <div class="form-group">
+                  <label for="bookEmail">Email Address *</label>
+                  <input type="email" id="bookEmail" class="form-control" placeholder="you@example.com" /><span class="form-error"></span>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="bookDate">Preferred Date *</label>
+                  <input type="date" id="bookDate" class="form-control" /><span class="form-error"></span>
+                </div>
+                <div class="form-group">
+                  <label for="bookTime">Preferred Time *</label>
+                  <select id="bookTime" class="form-control">
+                    <option value="">Select time...</option>
+                    <option value="08:00 AM">8:00 AM</option>
+                    <option value="09:00 AM">9:00 AM</option>
+                    <option value="10:00 AM">10:00 AM</option>
+                    <option value="11:00 AM">11:00 AM</option>
+                    <option value="12:00 PM">12:00 PM</option>
+                    <option value="01:00 PM">1:00 PM</option>
+                    <option value="02:00 PM">2:00 PM</option>
+                    <option value="03:00 PM">3:00 PM</option>
+                    <option value="04:00 PM">4:00 PM</option>
+                    <option value="05:00 PM">5:00 PM</option>
+                    <option value="06:00 PM">6:00 PM</option>
+                    <option value="07:00 PM">7:00 PM</option>
+                  </select>
+                  <span class="form-error"></span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="bookFitnessLevel">Your Fitness Level</label>
+                <select id="bookFitnessLevel" class="form-control">
+                  <option value="Beginner">Beginner (0-6 months)</option>
+                  <option value="Intermediate">Intermediate (6 months – 2 years)</option>
+                  <option value="Advanced">Advanced (2+ years)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="bookGoals">Your Goals / Notes</label>
+                <textarea id="bookGoals" class="form-control" rows="3" placeholder="Tell us about your fitness goals or any specific areas you'd like to focus on..."></textarea>
+              </div>
+              <div class="form-group">
+                <label style="font-size:.85rem;font-weight:600;color:var(--text-secondary);margin-bottom:.5rem;display:block">Session Format</label>
+                <div style="display:flex;gap:.75rem">
+                  <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;font-size:.875rem">
+                    <input type="radio" name="format" value="Online" checked style="accent-color:var(--primary)" /> Online (Zoom)
+                  </label>
+                  <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;font-size:.875rem">
+                    <input type="radio" name="format" value="In-Person" style="accent-color:var(--primary)" /> In-Person (SF Office)
+                  </label>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-large" style="width:100%;justify-content:center" id="bookBtn">
+                <i class="fas fa-calendar-check"></i> Confirm Booking
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Info Panel -->
+        <div>
+          <!-- Why Book -->
+          <div class="card" style="padding:1.75rem;margin-bottom:1.25rem">
+            <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1.25rem"><i class="fas fa-star" style="color:var(--primary)"></i> Why Book a Session?</h3>
+            <div style="display:flex;flex-direction:column;gap:1rem">
+              <div style="display:flex;gap:.75rem;align-items:flex-start">
+                <div style="width:36px;height:36px;border-radius:10px;background:rgba(0,212,170,.12);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-user-tie"></i></div>
+                <div><strong style="font-size:.9rem;display:block;margin-bottom:.15rem">Certified Experts</strong><span style="font-size:.82rem;color:var(--text-muted)">All coaches are certified with 5+ years of experience</span></div>
+              </div>
+              <div style="display:flex;gap:.75rem;align-items:flex-start">
+                <div style="width:36px;height:36px;border-radius:10px;background:rgba(91,140,255,.12);color:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-bullseye"></i></div>
+                <div><strong style="font-size:.9rem;display:block;margin-bottom:.15rem">Personalized Approach</strong><span style="font-size:.82rem;color:var(--text-muted)">Programs tailored to your exact goals and schedule</span></div>
+              </div>
+              <div style="display:flex;gap:.75rem;align-items:flex-start">
+                <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,107,53,.12);color:var(--secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-shield-alt"></i></div>
+                <div><strong style="font-size:.9rem;display:block;margin-bottom:.15rem">Money-Back Guarantee</strong><span style="font-size:.82rem;color:var(--text-muted)">Not satisfied? Full refund within 7 days, no questions</span></div>
+              </div>
+              <div style="display:flex;gap:.75rem;align-items:flex-start">
+                <div style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-sync-alt"></i></div>
+                <div><strong style="font-size:.9rem;display:block;margin-bottom:.15rem">Flexible Scheduling</strong><span style="font-size:.82rem;color:var(--text-muted)">Easy rescheduling up to 24 hours before your session</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Our Coaches -->
+          <div class="card" style="padding:1.75rem;margin-bottom:1.25rem">
+            <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1.25rem"><i class="fas fa-users" style="color:var(--blue)"></i> Meet Our Coaches</h3>
+            <div style="display:flex;flex-direction:column;gap:1rem">
+              <div style="display:flex;align-items:center;gap:.85rem">
+                <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#00d4aa,#00a88a);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:#fff;flex-shrink:0">M</div>
+                <div><strong style="font-size:.9rem;display:block">Coach Mike Rivera</strong><span style="font-size:.78rem;color:var(--text-muted)">CSCS · Strength & Conditioning · 8 yrs</span></div>
+                <div class="badge badge-green" style="margin-left:auto;font-size:.7rem">Available</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:.85rem">
+                <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#5b8cff,#3d6bff);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:#fff;flex-shrink:0">S</div>
+                <div><strong style="font-size:.9rem;display:block">Dr. Sarah Lee</strong><span style="font-size:.78rem;color:var(--text-muted)">RD, CSSD · Nutrition Coach · 10 yrs</span></div>
+                <div class="badge badge-green" style="margin-left:auto;font-size:.7rem">Available</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:.85rem">
+                <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#ff6b35,#e55a25);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:#fff;flex-shrink:0">A</div>
+                <div><strong style="font-size:.9rem;display:block">Coach Alex Torres</strong><span style="font-size:.78rem;color:var(--text-muted)">CPT · HIIT & Cardio Specialist · 6 yrs</span></div>
+                <div class="badge badge-orange" style="margin-left:auto;font-size:.7rem">Busy</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Testimonial -->
+          <div class="card" style="padding:1.75rem;background:linear-gradient(135deg,rgba(0,212,170,.06),rgba(91,140,255,.06));border-color:rgba(0,212,170,.2)">
+            <div style="color:#f59e0b;margin-bottom:.75rem">★★★★★</div>
+            <p style="font-style:italic;font-size:.9rem;color:var(--text-secondary);line-height:1.6;margin-bottom:1rem">"One session with Coach Mike changed my entire approach to training. He identified form issues I'd had for years and gave me a complete roadmap. Worth every penny!"</p>
+            <div style="display:flex;align-items:center;gap:.65rem">
+              <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:#fff">J</div>
+              <div><strong style="font-size:.85rem">James K.</strong><small style="display:block;color:var(--text-muted);font-size:.75rem">Personal Training Client</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none;padding-top:0"><p>&copy; 2026 FitTrack. All rights reserved.</p></div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    // Set min date to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate()+1);
+    document.getElementById('bookDate').min = tomorrow.toISOString().split('T')[0];
+    document.getElementById('bookDate').value = tomorrow.toISOString().split('T')[0];
+
+    window.selectService = function(el) {
+      document.querySelectorAll('.service-card').forEach(c=>c.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('selectedService').value = el.dataset.service;
+    };
+
+    document.getElementById('bookingForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const valid = Validator.validateForm(this, {
+        bookName:[Validator.rules.required],
+        bookEmail:[Validator.rules.required,Validator.rules.email],
+        bookDate:[Validator.rules.required],
+        bookTime:[Validator.rules.required],
+      });
+      if (!valid) return;
+
+      const btn = document.getElementById('bookBtn');
+      btn.innerHTML = '<span class="spinner"></span> Confirming...'; btn.disabled = true;
+
+      const booking = {
+        id: Date.now(),
+        name: document.getElementById('bookName').value,
+        email: document.getElementById('bookEmail').value,
+        service: document.getElementById('selectedService').value,
+        date: document.getElementById('bookDate').value,
+        time: document.getElementById('bookTime').value,
+        fitnessLevel: document.getElementById('bookFitnessLevel').value,
+        goals: document.getElementById('bookGoals').value,
+        format: document.querySelector('input[name="format"]:checked').value,
+        bookedAt: new Date().toISOString(),
+      };
+
+      const all = Storage.get(STORAGE_KEYS.BOOKINGS, []);
+      all.push(booking); Storage.set(STORAGE_KEYS.BOOKINGS, all);
+
+      setTimeout(()=>{
+        document.getElementById('bookingForm').style.display='none';
+        document.getElementById('bookingSuccess').style.display='block';
+        document.getElementById('bookingDetails').innerHTML = `
+          <div style="display:grid;gap:.4rem">
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Service</span><strong>${booking.service}</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Date</span><strong>${DateUtils.format(booking.date)}</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Time</span><strong>${booking.time}</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Format</span><strong>${booking.format}</strong></div>
+          </div>
+        `;
+        btn.innerHTML='<i class="fas fa-calendar-check"></i> Confirm Booking'; btn.disabled=false;
+        Toast.success('Booking confirmed! Check your email.');
+      }, 900);
+    });
+
+    window.resetBooking = function() {
+      document.getElementById('bookingForm').style.display='block';
+      document.getElementById('bookingSuccess').style.display='none';
+      document.getElementById('bookingForm').reset();
+      document.getElementById('bookDate').value = new Date(Date.now()+86400000).toISOString().split('T')[0];
+      document.getElementById('selectedService').value='Fitness Consultation';
+      document.querySelectorAll('.service-card').forEach((c,i)=>{ c.classList.toggle('selected',i===0); });
+    };
+  </script>
+</body>
+</html>

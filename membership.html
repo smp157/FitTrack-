@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Membership Plans – FitTrack</title>
+  <meta name="description" content="Choose the FitTrack membership plan that fits your fitness goals. Basic, Pro, or Premium — all include a 14-day free trial." />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="inner-page">
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo"><i class="fas fa-bolt"></i><span>FitTrack</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="exercise-library.html">Exercises</a></li>
+        <li><a href="membership.html" class="active">Membership</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-outline" id="loginBtn">Login</a>
+        <a href="signup.html" class="btn btn-primary">Get Started</a>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-tag">Membership</span>
+      <h1>Simple, Transparent <span class="gradient-text">Pricing</span></h1>
+      <p>Choose the plan that fits your goals. All plans include a 14-day free trial. No credit card required to start.</p>
+      <!-- Toggle -->
+      <div style="display:inline-flex;background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:4px;margin-top:1rem">
+        <button class="period-tab active" id="monthlyToggle" style="border-radius:100px;padding:.4rem 1.25rem;font-size:.9rem">Monthly</button>
+        <button class="period-tab" id="yearlyToggle" style="border-radius:100px;padding:.4rem 1.25rem;font-size:.9rem">Yearly <span class="badge badge-green" style="font-size:.65rem">Save 25%</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="membership-section">
+    <div class="container">
+      <div class="plans-grid">
+        <!-- Basic -->
+        <div class="plan-card basic">
+          <div class="plan-icon"><i class="fas fa-seedling"></i></div>
+          <div class="plan-name">Basic</div>
+          <div class="plan-price">
+            <span class="currency">$</span><span class="price" id="basicPrice">9</span><span class="period">/month</span>
+          </div>
+          <div class="plan-description">Perfect for beginners starting their fitness journey</div>
+          <ul class="plan-features">
+            <li class="plan-feature"><i class="fas fa-check"></i> Activity tracking dashboard</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> Workout logging (unlimited)</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> Basic nutrition tracker</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> Up to 5 goals</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> Exercise library access</li>
+            <li class="plan-feature disabled"><i class="fas fa-times"></i> Advanced analytics</li>
+            <li class="plan-feature disabled"><i class="fas fa-times"></i> Personalized programs</li>
+            <li class="plan-feature disabled"><i class="fas fa-times"></i> 1-on-1 coaching</li>
+          </ul>
+          <a href="signup.html" class="btn btn-outline" style="width:100%;justify-content:center">Start Free Trial</a>
+        </div>
+
+        <!-- Pro -->
+        <div class="plan-card pro popular">
+          <span class="popular-badge"><i class="fas fa-star"></i> Most Popular</span>
+          <div class="plan-icon"><i class="fas fa-bolt"></i></div>
+          <div class="plan-name">Pro</div>
+          <div class="plan-price">
+            <span class="currency">$</span><span class="price" id="proPrice">19</span><span class="period">/month</span>
+          </div>
+          <div class="plan-description">For dedicated fitness enthusiasts who want more</div>
+          <ul class="plan-features">
+            <li class="plan-feature"><i class="fas fa-check"></i> Everything in Basic</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> Advanced charts & analytics</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> Full macro tracking</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> Unlimited goals</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> Workout planner & scheduler</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> Progress photos tracking</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> Priority support</li>
+            <li class="plan-feature disabled"><i class="fas fa-times"></i> 1-on-1 coaching</li>
+          </ul>
+          <a href="signup.html" class="btn btn-primary" style="width:100%;justify-content:center">Start Free Trial</a>
+        </div>
+
+        <!-- Premium -->
+        <div class="plan-card premium">
+          <div class="plan-icon"><i class="fas fa-crown"></i></div>
+          <div class="plan-name">Premium</div>
+          <div class="plan-price">
+            <span class="currency">$</span><span class="price" id="premiumPrice">39</span><span class="period">/month</span>
+          </div>
+          <div class="plan-description">Elite coaching and personalized programs for serious athletes</div>
+          <ul class="plan-features">
+            <li class="plan-feature"><i class="fas fa-check"></i> Everything in Pro</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> Personalized training programs</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> Custom nutrition plans</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> Weekly 1-on-1 coaching calls</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> API sync (Google Fit, Apple Health)</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> Body composition analysis</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> 24/7 dedicated support</li>
+            <li class="plan-feature"><i class="fas fa-check"></i> Exclusive community access</li>
+          </ul>
+          <a href="signup.html" class="btn btn-outline" style="width:100%;justify-content:center;border-color:var(--purple);color:var(--purple)">Start Free Trial</a>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="section-header">
+        <h2>Frequently Asked <span class="gradient-text">Questions</span></h2>
+      </div>
+      <div style="max-width:700px;margin:0 auto">
+        <div class="faq-item" style="border-bottom:1px solid var(--border);padding:1.25rem 0;cursor:pointer" onclick="toggleFaq(this)">
+          <div style="display:flex;align-items:center;justify-content:space-between;font-weight:600">
+            <span>Can I cancel my subscription anytime?</span>
+            <i class="fas fa-chevron-down" style="transition:transform .3s"></i>
+          </div>
+          <div class="faq-answer" style="display:none;margin-top:.75rem;color:var(--text-secondary);font-size:.9rem;line-height:1.6">Yes, you can cancel your subscription at any time. Your access will continue until the end of your billing period, and you will not be charged again.</div>
+        </div>
+        <div class="faq-item" style="border-bottom:1px solid var(--border);padding:1.25rem 0;cursor:pointer" onclick="toggleFaq(this)">
+          <div style="display:flex;align-items:center;justify-content:space-between;font-weight:600">
+            <span>What happens after my free trial?</span>
+            <i class="fas fa-chevron-down" style="transition:transform .3s"></i>
+          </div>
+          <div class="faq-answer" style="display:none;margin-top:.75rem;color:var(--text-secondary);font-size:.9rem;line-height:1.6">After your 14-day free trial, you will be automatically subscribed to the plan you selected. We will send you a reminder 3 days before your trial ends.</div>
+        </div>
+        <div class="faq-item" style="border-bottom:1px solid var(--border);padding:1.25rem 0;cursor:pointer" onclick="toggleFaq(this)">
+          <div style="display:flex;align-items:center;justify-content:space-between;font-weight:600">
+            <span>Can I upgrade or downgrade my plan?</span>
+            <i class="fas fa-chevron-down" style="transition:transform .3s"></i>
+          </div>
+          <div class="faq-answer" style="display:none;margin-top:.75rem;color:var(--text-secondary);font-size:.9rem;line-height:1.6">Absolutely! You can upgrade or downgrade at any time. Upgrades take effect immediately, while downgrades take effect at the next billing cycle.</div>
+        </div>
+        <div class="faq-item" style="padding:1.25rem 0;cursor:pointer" onclick="toggleFaq(this)">
+          <div style="display:flex;align-items:center;justify-content:space-between;font-weight:600">
+            <span>Is my data secure?</span>
+            <i class="fas fa-chevron-down" style="transition:transform .3s"></i>
+          </div>
+          <div class="faq-answer" style="display:none;margin-top:.75rem;color:var(--text-secondary);font-size:.9rem;line-height:1.6">Yes. We use industry-standard encryption to protect your personal and fitness data. We never sell your data to third parties.</div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div style="text-align:center;margin-top:4rem">
+        <h2 style="font-size:1.75rem;font-weight:900;margin-bottom:.75rem">Still have questions?</h2>
+        <p style="color:var(--text-secondary);margin-bottom:1.5rem">Our team is here to help you choose the right plan for your fitness journey.</p>
+        <a href="contact.html" class="btn btn-outline btn-large"><i class="fas fa-envelope"></i> Contact Us</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none;padding-top:0"><p>&copy; 2026 FitTrack. All rights reserved.</p></div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let isYearly = false;
+    const prices = { monthly:{ basic:9, pro:19, premium:39 }, yearly:{ basic:7, pro:14, premium:29 } };
+
+    document.getElementById('monthlyToggle').addEventListener('click',()=>{
+      isYearly=false;
+      document.getElementById('monthlyToggle').classList.add('active');
+      document.getElementById('yearlyToggle').classList.remove('active');
+      updatePrices();
+    });
+    document.getElementById('yearlyToggle').addEventListener('click',()=>{
+      isYearly=true;
+      document.getElementById('yearlyToggle').classList.add('active');
+      document.getElementById('monthlyToggle').classList.remove('active');
+      updatePrices();
+    });
+
+    function updatePrices() {
+      const p = isYearly ? prices.yearly : prices.monthly;
+      document.getElementById('basicPrice').textContent = p.basic;
+      document.getElementById('proPrice').textContent = p.pro;
+      document.getElementById('premiumPrice').textContent = p.premium;
+    }
+
+    window.toggleFaq = function(el) {
+      const answer = el.querySelector('.faq-answer');
+      const icon = el.querySelector('.fa-chevron-down');
+      const isOpen = answer.style.display !== 'none';
+      answer.style.display = isOpen ? 'none' : 'block';
+      icon.style.transform = isOpen ? '' : 'rotate(180deg)';
+    };
+  </script>
+</body>
+</html>

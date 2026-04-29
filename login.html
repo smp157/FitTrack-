@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login – FitTrack</title>
+  <meta name="description" content="Sign in or create a free FitTrack account to access your personal fitness dashboard." />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+  <link rel="stylesheet" href="../css/fixes.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* ── Tab switcher ── */
+    .auth-tabs {
+      display: flex;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 1.75rem;
+      gap: 4px;
+    }
+    .auth-tab {
+      flex: 1;
+      padding: .55rem 1rem;
+      border: none;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: .9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .25s ease;
+      font-family: inherit;
+    }
+    .auth-tab.active {
+      background: linear-gradient(135deg, var(--primary), #00b894);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0,212,170,.3);
+    }
+
+    /* ── Form panels ── */
+    .auth-panel {
+      display: none;
+      animation: panelIn .3s ease;
+    }
+    .auth-panel.active { display: block; }
+
+    @keyframes panelIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Password strength ── */
+    .pw-strength-bar {
+      display: flex;
+      gap: 4px;
+      margin-top: .4rem;
+    }
+    .pw-strength-bar span {
+      flex: 1;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--border);
+      transition: background .3s;
+    }
+    .pw-strength-label {
+      font-size: .72rem;
+      margin-top: .3rem;
+      color: var(--text-muted);
+      min-height: 1em;
+    }
+
+    /* ── Visual side adjustments ── */
+    .auth-visual-signup h2 { display: none; }
+    .auth-visual.signup-mode h2 { display: none; }
+    .auth-visual-signup-txt { display: none; }
+    .auth-visual.signup-mode .auth-visual-signup-txt { display: block; }
+    .auth-visual.signup-mode .auth-visual-login-txt { display: none; }
+
+    /* ── Name row ── */
+    .name-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+    @media (max-width: 480px) { .name-row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body class="auth-body">
+  <div class="auth-page">
+
+    <!-- Visual Side -->
+    <div class="auth-visual" id="authVisual">
+      <div class="auth-brand">
+        <a href="../index.html" class="nav-logo">
+          <i class="fas fa-bolt"></i>
+          <span>FitTrack</span>
+        </a>
+        <!-- Login message -->
+        <div class="auth-visual-login-txt">
+          <h2>Welcome back,<br /><span class="gradient-text">Champion!</span></h2>
+          <p>Log in to continue your fitness journey and track your progress.</p>
+        </div>
+        <!-- Sign up message -->
+        <div class="auth-visual-signup-txt">
+          <h2>Start Your<br /><span class="gradient-text">Fitness Journey!</span></h2>
+          <p>Create a free account and unlock your personal fitness dashboard in seconds.</p>
+        </div>
+      </div>
+      <div class="auth-features">
+        <div class="auth-feature-item green">
+          <i class="fas fa-chart-line"></i>
+          <div><strong>Track Your Progress</strong><small>Visual charts &amp; analytics</small></div>
+        </div>
+        <div class="auth-feature-item orange">
+          <i class="fas fa-dumbbell"></i>
+          <div><strong>Log Workouts Instantly</strong><small>Sets, reps, weight &amp; more</small></div>
+        </div>
+        <div class="auth-feature-item blue">
+          <i class="fas fa-apple-alt"></i>
+          <div><strong>Nutrition Tracking</strong><small>Monitor macros &amp; calories</small></div>
+        </div>
+        <div class="auth-feature-item purple">
+          <i class="fas fa-bullseye"></i>
+          <div><strong>Set &amp; Crush Goals</strong><small>Daily, weekly, monthly targets</small></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Side -->
+    <div class="auth-form-side">
+      <div class="auth-form-container">
+
+        <!-- Tab switcher -->
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">
+            <i class="fas fa-sign-in-alt"></i> Sign In
+          </button>
+          <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">
+            <i class="fas fa-user-plus"></i> Sign Up
+          </button>
+        </div>
+
+        <!-- ─────────── SIGN IN PANEL ─────────── -->
+        <div class="auth-panel active" id="panelLogin">
+          <div class="auth-header" style="margin-bottom:1.25rem">
+            <h1>Sign In</h1>
+            <p>Access your personal fitness dashboard</p>
+          </div>
+
+          <div class="social-login">
+            <button class="social-btn" onclick="Toast.info('Google login coming soon!')">
+              <i class="fab fa-google"></i> Google
+            </button>
+            <button class="social-btn" onclick="Toast.info('Apple login coming soon!')">
+              <i class="fab fa-apple"></i> Apple
+            </button>
+          </div>
+          <div class="auth-divider"><span>or continue with email</span></div>
+
+          <form id="loginForm" novalidate>
+            <div class="form-group">
+              <label for="loginEmail">Email Address</label>
+              <input type="email" id="loginEmail" class="form-control" placeholder="you@example.com" autocomplete="email" />
+              <span class="form-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">Password</label>
+              <div class="password-wrapper">
+                <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" autocomplete="current-password" />
+                <button type="button" class="password-toggle" id="pwToggleLogin" aria-label="Toggle password">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+              <span class="form-error"></span>
+            </div>
+            <div class="form-options">
+              <label class="checkbox-label">
+                <input type="checkbox" id="rememberMe" /> Remember me
+              </label>
+              <a href="#" class="forgot-link" onclick="Toast.info('Password reset coming soon!');return false">Forgot password?</a>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;" id="loginBtn">
+              <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+            <p class="terms-text" style="margin-top:1.25rem">
+              By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+            </p>
+            <div class="demo-login" style="margin-top:.75rem;padding:.85rem 1rem;background:rgba(0,212,170,0.06);border:1px dashed rgba(0,212,170,0.3);border-radius:10px;font-size:0.82rem;color:var(--text-secondary)">
+              <strong style="color:var(--primary)"><i class="fas fa-lightbulb"></i> Demo Account</strong><br/>
+              Email: <code>demo@fittrack.com</code> &nbsp; Password: <code>Demo1234!</code><br/>
+              <button type="button" class="btn btn-outline btn-sm" style="margin-top:.5rem" id="demoFillBtn">
+                <i class="fas fa-magic"></i> Fill Demo Credentials
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- ─────────── SIGN UP PANEL ─────────── -->
+        <div class="auth-panel" id="panelSignup">
+          <div class="auth-header" style="margin-bottom:1.25rem">
+            <h1>Create Account</h1>
+            <p>Free forever. No credit card required.</p>
+          </div>
+
+          <form id="signupForm" novalidate>
+            <div class="name-row">
+              <div class="form-group">
+                <label for="signupFirstName">First Name *</label>
+                <input type="text" id="signupFirstName" class="form-control" placeholder="Alex" autocomplete="given-name" />
+                <span class="form-error"></span>
+              </div>
+              <div class="form-group">
+                <label for="signupLastName">Last Name</label>
+                <input type="text" id="signupLastName" class="form-control" placeholder="Johnson" autocomplete="family-name" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="signupEmail">Email Address *</label>
+              <input type="email" id="signupEmail" class="form-control" placeholder="you@example.com" autocomplete="email" />
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="signupPassword">Password *</label>
+              <div class="password-wrapper">
+                <input type="password" id="signupPassword" class="form-control" placeholder="Min. 8 characters" autocomplete="new-password" id="signupPassword" />
+                <button type="button" class="password-toggle" id="pwToggleSignup" aria-label="Toggle password">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+              <span class="form-error"></span>
+              <div class="pw-strength-bar" id="pwStrengthBar">
+                <span id="pwS1"></span><span id="pwS2"></span><span id="pwS3"></span><span id="pwS4"></span>
+              </div>
+              <div class="pw-strength-label" id="pwStrengthLabel"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="signupConfirmPassword">Confirm Password *</label>
+              <div class="password-wrapper">
+                <input type="password" id="signupConfirmPassword" class="form-control" placeholder="Re-enter password" autocomplete="new-password" />
+                <button type="button" class="password-toggle" id="pwToggleConfirm" aria-label="Toggle confirm password">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="signupGoal">Fitness Goal</label>
+              <select id="signupGoal" class="form-control">
+                <option value="general">General Fitness</option>
+                <option value="weight-loss">Weight Loss</option>
+                <option value="muscle-gain">Muscle Gain</option>
+                <option value="endurance">Endurance</option>
+                <option value="flexibility">Flexibility</option>
+              </select>
+            </div>
+
+            <label class="checkbox-label" style="margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:.5rem">
+              <input type="checkbox" id="agreeTerms" style="margin-top:2px;accent-color:var(--primary)" />
+              <span style="font-size:.82rem;color:var(--text-secondary)">
+                I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+              </span>
+            </label>
+            <span class="form-error" id="termsError" style="margin-bottom:.75rem;display:block"></span>
+
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;" id="signupBtn">
+              <i class="fas fa-user-plus"></i> Create Free Account
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    // ── Ensure demo account exists ──
+    (function() {
+      const users = Storage.get(STORAGE_KEYS.USERS, []);
+      if (!users.find(u => u.email === 'demo@fittrack.com')) {
+        const result = Auth.register({
+          name: 'Alex Demo', email: 'demo@fittrack.com', password: 'Demo1234!',
+          age: 28, gender: 'prefer-not-to-say', height: 175, weight: 72,
+          fitnessGoal: 'muscle-gain', activityLevel: 'moderate',
+        });
+        if (result.success) {
+          MockData.seedWorkouts(result.user.id);
+          MockData.seedNutrition(result.user.id);
+          MockData.seedGoals(result.user.id);
+          Storage.remove(STORAGE_KEYS.CURRENT_USER);
+        }
+      }
+    })();
+
+    // ── Redirect if already logged in ──
+    if (Auth.isLoggedIn()) window.location.href = 'dashboard.html';
+
+    // ── Tab switcher ──
+    const visual = document.getElementById('authVisual');
+    window.switchTab = function(tab) {
+      document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+      document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
+      document.getElementById('panelLogin').classList.toggle('active', tab === 'login');
+      document.getElementById('panelSignup').classList.toggle('active', tab === 'signup');
+
+      // Update visual side text
+      if (tab === 'signup') {
+        visual.querySelector('.auth-visual-login-txt').style.display = 'none';
+        visual.querySelector('.auth-visual-signup-txt').style.display = 'block';
+      } else {
+        visual.querySelector('.auth-visual-login-txt').style.display = 'block';
+        visual.querySelector('.auth-visual-signup-txt').style.display = 'none';
+      }
+    };
+
+    // ── Password toggles ──
+    function makeToggle(btnId, inputId) {
+      document.getElementById(btnId).addEventListener('click', function() {
+        const inp = document.getElementById(inputId);
+        const icon = this.querySelector('i');
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+        icon.className = inp.type === 'text' ? 'fas fa-eye-slash' : 'fas fa-eye';
+      });
+    }
+    makeToggle('pwToggleLogin', 'loginPassword');
+    makeToggle('pwToggleSignup', 'signupPassword');
+    makeToggle('pwToggleConfirm', 'signupConfirmPassword');
+
+    // ── Demo fill ──
+    document.getElementById('demoFillBtn').addEventListener('click', () => {
+      document.getElementById('loginEmail').value = 'demo@fittrack.com';
+      document.getElementById('loginPassword').value = 'Demo1234!';
+    });
+
+    // ── Password strength meter ──
+    const COLORS = { weak:'#ef4444', fair:'#f59e0b', good:'#5b8cff', strong:'#00d4aa' };
+    document.getElementById('signupPassword').addEventListener('input', function() {
+      const pw = this.value;
+      let score = 0;
+      if (pw.length >= 8) score++;
+      if (/[A-Z]/.test(pw)) score++;
+      if (/[0-9]/.test(pw)) score++;
+      if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+      const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+      const colors = ['', COLORS.weak, COLORS.fair, COLORS.good, COLORS.strong];
+      const bars = [document.getElementById('pwS1'), document.getElementById('pwS2'), document.getElementById('pwS3'), document.getElementById('pwS4')];
+
+      bars.forEach((b, i) => {
+        b.style.background = i < score ? colors[score] : 'var(--border)';
+      });
+      const lbl = document.getElementById('pwStrengthLabel');
+      lbl.textContent = pw.length ? labels[score] : '';
+      lbl.style.color = colors[score] || 'var(--text-muted)';
+    });
+
+    // ── SIGN IN FORM ──
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('loginBtn');
+      const valid = Validator.validateForm(this, {
+        loginEmail: [Validator.rules.required, Validator.rules.email],
+        loginPassword: [Validator.rules.required],
+      });
+      if (!valid) return;
+
+      btn.innerHTML = '<span class="spinner"></span> Signing in...';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        const result = Auth.login(
+          document.getElementById('loginEmail').value.trim(),
+          document.getElementById('loginPassword').value
+        );
+        if (result.success) {
+          MockData.seedWorkouts(result.user.id);
+          MockData.seedNutrition(result.user.id);
+          MockData.seedGoals(result.user.id);
+          Toast.success('Welcome back, ' + result.user.name + '! 💪');
+          setTimeout(() => {
+            const params = new URLSearchParams(window.location.search);
+            window.location.href = params.get('redirect') || 'dashboard.html';
+          }, 800);
+        } else {
+          btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+          btn.disabled = false;
+          Toast.error(result.message);
+        }
+      }, 600);
+    });
+
+    // ── SIGN UP FORM ──
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('signupBtn');
+
+      // Validate required fields
+      const valid = Validator.validateForm(this, {
+        signupFirstName: [Validator.rules.required],
+        signupEmail:     [Validator.rules.required, Validator.rules.email],
+        signupPassword:  [Validator.rules.required, Validator.rules.minLength(8)],
+        signupConfirmPassword: [Validator.rules.required],
+      });
+
+      // Password match check
+      const pw  = document.getElementById('signupPassword').value;
+      const cpw = document.getElementById('signupConfirmPassword').value;
+      if (pw !== cpw) {
+        const errEl = document.getElementById('signupConfirmPassword').closest('.form-group').querySelector('.form-error');
+        errEl.textContent = 'Passwords do not match.';
+        document.getElementById('signupConfirmPassword').classList.add('error');
+        return;
+      }
+
+      // Terms check
+      if (!document.getElementById('agreeTerms').checked) {
+        document.getElementById('termsError').textContent = 'You must agree to the Terms of Service.';
+        return;
+      }
+      document.getElementById('termsError').textContent = '';
+
+      if (!valid) return;
+
+      const firstName = document.getElementById('signupFirstName').value.trim();
+      const lastName  = document.getElementById('signupLastName').value.trim();
+      const fullName  = lastName ? `${firstName} ${lastName}` : firstName;
+
+      btn.innerHTML = '<span class="spinner"></span> Creating account...';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        // Check if email already in use
+        const users = Storage.get(STORAGE_KEYS.USERS, []);
+        if (users.find(u => u.email === document.getElementById('signupEmail').value.trim().toLowerCase())) {
+          Toast.error('An account with this email already exists. Please sign in.');
+          btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Free Account';
+          btn.disabled = false;
+          switchTab('login');
+          document.getElementById('loginEmail').value = document.getElementById('signupEmail').value;
+          return;
+        }
+
+        const result = Auth.register({
+          name:          fullName,
+          email:         document.getElementById('signupEmail').value.trim(),
+          password:      document.getElementById('signupPassword').value,
+          fitnessGoal:   document.getElementById('signupGoal').value,
+          activityLevel: 'moderate',
+          joinedDate:    new Date().toISOString().split('T')[0],
+        });
+
+        if (result.success) {
+          // Auto-login (new accounts start with zero data — no seeding)
+          Auth.login(document.getElementById('signupEmail').value.trim(), document.getElementById('signupPassword').value);
+
+          Toast.success('Account created! Welcome to FitTrack, ' + firstName + '! 🎉');
+          setTimeout(() => { window.location.href = 'dashboard.html'; }, 900);
+        } else {
+          Toast.error(result.message || 'Registration failed. Please try again.');
+          btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Free Account';
+          btn.disabled = false;
+        }
+      }, 700);
+    });
+
+    // ── Open correct tab from URL param ──
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('tab') === 'signup') switchTab('signup');
+  </script>
+</body>
+</html>

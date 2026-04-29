@@ -1,0 +1,204 @@
+/* ============================================
+   FitTrack - Mobile Nav & Misc Fixes
+   ============================================ */
+
+/* Mobile nav open state */
+.nav-links.open {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 280px;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border);
+  padding: 5rem 2rem 2rem;
+  z-index: 900;
+  gap: 0.5rem;
+  animation: slideInRight 0.3s ease;
+  backdrop-filter: blur(20px);
+}
+
+.nav-links.open a {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+.hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+/* Sidebar overlay display fix */
+#sidebarOverlay.show { display: block !important; }
+
+/* Form control error state */
+.form-control.error {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+}
+
+/* Ensure period-tab buttons work in non-sidebar pages */
+.period-tabs .period-tab.active {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+/* Dashboard content scroll fix */
+.main-content {
+  overflow-x: hidden;
+}
+
+/* Auth body */
+.auth-body {
+  background: var(--bg-dark);
+}
+
+/* Responsive grid fixes */
+@media (max-width: 768px) {
+  .dashboard-content {
+    padding: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .welcome-banner {
+    flex-direction: column;
+  }
+
+  .welcome-actions {
+    width: 100%;
+  }
+
+  .welcome-actions .btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .planner-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .page-hero {
+    padding: 7rem 0 3rem;
+  }
+
+  .page-hero h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-header {
+    padding: 0.75rem 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .planner-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dashboard sidebar responsive fixes */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 260px;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .sidebar-link span,
+  .sidebar-section-label,
+  .nav-logo span {
+    display: block;
+  }
+}
+
+/* Print styles */
+@media print {
+  .sidebar, .dashboard-header, .btn { display: none; }
+  .main-content { margin-left: 0; }
+}
+
+/* Smooth page transitions */
+.page-transition {
+  animation: fadeIn 0.4s ease;
+}
+
+/* Custom scrollbar for sidebar */
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+/* Tooltip */
+[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: rgba(0, 212, 170, 0.3);
+  color: var(--text-primary);
+}
+
+/* Link on dark pages */
+.auth-form-container a,
+.auth-header a {
+  color: var(--primary);
+  transition: var(--transition);
+}
+.auth-form-container a:hover { text-decoration: underline; }
+
+/* Profile grid responsive */
+@media (max-width: 900px) {
+  .dashboard-content > div[style*="grid-template-columns:300px"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Contact grid responsive */
+@media (max-width: 768px) {
+  .booking-grid {
+    grid-template-columns: 1fr;
+  }
+}

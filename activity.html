@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Activity Tracking – FitTrack</title>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* Live Tracking Banner */
+    .tracking-banner {
+      background: linear-gradient(135deg,rgba(0,212,170,.08),rgba(91,140,255,.08));
+      border: 1px solid rgba(0,212,170,.25);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .tracking-pulse {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 0 0 rgba(0,212,170,.6);
+      flex-shrink: 0;
+    }
+    .tracking-pulse.active {
+      animation: pulseRing 1.2s infinite;
+    }
+    @keyframes pulseRing {
+      0%   { box-shadow: 0 0 0 0 rgba(0,212,170,.6); }
+      70%  { box-shadow: 0 0 0 10px rgba(0,212,170,0); }
+      100% { box-shadow: 0 0 0 0 rgba(0,212,170,0); }
+    }
+    .live-stats { display: flex; gap: 1.5rem; flex-wrap: wrap; flex: 1; }
+    .live-stat { text-align: center; min-width: 60px; }
+    .live-stat-val { font-size: 1.4rem; font-weight: 800; color: var(--text-primary); line-height: 1; }
+    .live-stat-lbl { font-size: .68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; margin-top: .2rem; }
+    .sensor-btns { display: flex; gap: .6rem; flex-wrap: wrap; margin-left: auto; }
+    .sensor-status { display: flex; gap: .75rem; flex-wrap: wrap; margin-top: .6rem; width: 100%; }
+    .sensor-badge { font-size: .7rem; padding: .2rem .6rem; border-radius: 20px;
+      background: rgba(255,255,255,.05); border: 1px solid var(--border);
+      display: flex; align-items: center; gap: .3rem; color: var(--text-muted); }
+    .sensor-badge.ok { border-color: rgba(0,212,170,.4); color: var(--primary); }
+    .sensor-badge.err { border-color: rgba(239,68,68,.4); color: #ef4444; }
+  </style>
+</head>
+<body>
+  <div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:499"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><a href="../index.html" class="nav-logo"><i class="fas fa-bolt"></i><span>FitTrack</span></a></div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Main</div>
+        <a href="dashboard.html" class="sidebar-link"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+        <a href="activity.html" class="sidebar-link active"><i class="fas fa-chart-line"></i><span>Activity</span></a>
+        <a href="workout-log.html" class="sidebar-link"><i class="fas fa-dumbbell"></i><span>Workout Log</span></a>
+        <a href="workout-planner.html" class="sidebar-link"><i class="fas fa-calendar-week"></i><span>Planner</span></a>
+        <a href="nutrition.html" class="sidebar-link"><i class="fas fa-apple-alt"></i><span>Nutrition</span></a>
+        <a href="goals.html" class="sidebar-link"><i class="fas fa-bullseye"></i><span>Goals</span></a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Explore</div>
+        <a href="exercise-library.html" class="sidebar-link"><i class="fas fa-book-open"></i><span>Exercise Library</span></a>
+        <a href="blog.html" class="sidebar-link"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+        <a href="membership.html" class="sidebar-link"><i class="fas fa-crown"></i><span>Membership</span></a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Account</div>
+        <a href="profile.html" class="sidebar-link"><i class="fas fa-user-circle"></i><span>Profile</span></a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.5rem;border-radius:10px;background:var(--bg-card2);margin-bottom:.75rem">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff" id="sidebarUserAvatar">A</div>
+        <div style="overflow:hidden;flex:1"><div style="font-size:.85rem;font-weight:700" id="sidebarUserName">User</div><div style="font-size:.7rem;color:var(--text-muted)" id="sidebarUserEmail"></div></div>
+      </div>
+      <button class="btn btn-outline btn-sm" style="width:100%;justify-content:center" data-logout><i class="fas fa-sign-out-alt"></i><span> Logout</span></button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="dashboard-header">
+      <div style="display:flex;align-items:center;gap:1rem">
+        <button id="menuToggle" style="background:none;border:none;color:var(--text-secondary);font-size:1.2rem;cursor:pointer;padding:.4rem;border-radius:8px"><i class="fas fa-bars"></i></button>
+        <div><div class="page-title">Activity Tracking</div><div class="page-subtitle">Your fitness metrics at a glance</div></div>
+      </div>
+      <div class="period-tabs">
+        <button class="period-tab active" data-period="week">Week</button>
+        <button class="period-tab" data-period="month">Month</button>
+      </div>
+    </header>
+
+    <div class="dashboard-content">
+      <!-- Live Sensor Tracking Banner -->
+      <div class="tracking-banner" id="trackingBanner">
+        <div class="tracking-pulse" id="trackingPulse"></div>
+        <div>
+          <div style="font-weight:700;font-size:.95rem" id="trackingLabel">Sensor Tracking</div>
+          <div style="font-size:.75rem;color:var(--text-muted)" id="trackingSubLabel">Start tracking to use your phone sensors live</div>
+        </div>
+        <div class="live-stats" id="liveStats">
+          <div class="live-stat"><div class="live-stat-val" id="liveSteps">0</div><div class="live-stat-lbl"><i class="fas fa-shoe-prints"></i> Steps</div></div>
+          <div class="live-stat"><div class="live-stat-val" id="liveCal">0</div><div class="live-stat-lbl"><i class="fas fa-fire-alt"></i> kcal</div></div>
+          <div class="live-stat"><div class="live-stat-val" id="liveDist">0.0</div><div class="live-stat-lbl"><i class="fas fa-road"></i> km</div></div>
+          <div class="live-stat"><div class="live-stat-val" id="liveHR" style="color:var(--red)">—</div><div class="live-stat-lbl"><i class="fas fa-heartbeat"></i> bpm</div></div>
+          <div class="live-stat"><div class="live-stat-val" id="liveTime">0:00</div><div class="live-stat-lbl"><i class="fas fa-stopwatch"></i> Time</div></div>
+        </div>
+        <div class="sensor-btns">
+          <button class="btn btn-primary btn-sm" id="btnStartTracking"><i class="fas fa-play"></i> Start</button>
+          <button class="btn btn-outline btn-sm" id="btnStopTracking" style="display:none"><i class="fas fa-stop"></i> Stop &amp; Save</button>
+          <button class="btn btn-outline btn-sm" id="btnConnectHR" title="Connect Bluetooth heart rate monitor"><i class="fas fa-heartbeat" style="color:var(--red)"></i> HR Monitor</button>
+        </div>
+        <div class="sensor-status" id="sensorStatus">
+          <span class="sensor-badge" id="badgeAccel"><i class="fas fa-mobile-alt"></i> Accelerometer</span>
+          <span class="sensor-badge" id="badgeGPS"><i class="fas fa-satellite"></i> GPS</span>
+          <span class="sensor-badge" id="badgeHR"><i class="fas fa-heartbeat"></i> Heart Rate</span>
+        </div>
+      </div>
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card green"><div class="stat-info"><div class="stat-label">Steps Today</div><div class="stat-value" id="actSteps">0</div><div class="stat-change" id="actStepsChange" style="color:var(--text-muted)"><i class="fas fa-minus"></i> No data yet</div></div><div class="stat-icon green"><i class="fas fa-shoe-prints"></i></div></div>
+        <div class="stat-card orange"><div class="stat-info"><div class="stat-label">Calories Burned</div><div class="stat-value" id="actCalories">0</div><div class="stat-change" id="actCalChange" style="color:var(--text-muted)"><i class="fas fa-minus"></i> No data yet</div></div><div class="stat-icon orange"><i class="fas fa-fire-alt"></i></div></div>
+        <div class="stat-card blue"><div class="stat-info"><div class="stat-label">Distance</div><div class="stat-value" id="actDistance">0 km</div><div class="stat-change" id="actDistChange" style="color:var(--text-muted)"><i class="fas fa-minus"></i> No data yet</div></div><div class="stat-icon blue"><i class="fas fa-road"></i></div></div>
+        <div class="stat-card purple"><div class="stat-info"><div class="stat-label">Active Minutes</div><div class="stat-value" id="actMinutes">0 min</div><div class="stat-change" id="actMinChange" style="color:var(--text-muted)"><i class="fas fa-minus"></i> No data yet</div></div><div class="stat-icon purple"><i class="fas fa-stopwatch"></i></div></div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div>
+          <!-- Steps Chart -->
+          <div class="widget-card">
+            <div class="widget-header"><div class="widget-title"><i class="fas fa-shoe-prints"></i> Steps Overview</div></div>
+            <div class="chart-container" style="height:220px"><canvas id="stepsChart"></canvas></div>
+          </div>
+
+          <!-- Calories Chart -->
+          <div class="widget-card">
+            <div class="widget-header"><div class="widget-title"><i class="fas fa-fire-alt"></i> Calories Burned</div></div>
+            <div class="chart-container" style="height:200px"><canvas id="caloriesChart"></canvas></div>
+          </div>
+
+          <!-- Distance chart -->
+          <div class="widget-card">
+            <div class="widget-header"><div class="widget-title"><i class="fas fa-road"></i> Distance Covered</div></div>
+            <div class="chart-container" style="height:200px"><canvas id="distanceChart"></canvas></div>
+          </div>
+        </div>
+
+        <div>
+          <!-- Heart Rate -->
+          <div class="widget-card">
+            <div class="widget-header"><div class="widget-title"><i class="fas fa-heartbeat"></i> Heart Rate</div></div>
+            <div style="text-align:center;padding:1rem 0">
+              <div id="hrMainVal" style="font-size:3.5rem;font-weight:900;color:var(--red);line-height:1">—</div>
+              <div id="hrStatus" style="color:var(--text-muted);font-size:.85rem;margin-bottom:1rem">Log data to see heart rate</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;text-align:left">
+                <div style="padding:.75rem;background:var(--bg-card2);border-radius:10px"><div style="font-size:.7rem;color:var(--text-muted);margin-bottom:.2rem">RESTING</div><div id="hrResting" style="font-weight:800;color:var(--primary)">— bpm</div></div>
+                <div style="padding:.75rem;background:var(--bg-card2);border-radius:10px"><div style="font-size:.7rem;color:var(--text-muted);margin-bottom:.2rem">PEAK</div><div id="hrPeak" style="font-weight:800;color:var(--red)">— bpm</div></div>
+                <div style="padding:.75rem;background:var(--bg-card2);border-radius:10px"><div style="font-size:.7rem;color:var(--text-muted);margin-bottom:.2rem">CARDIO ZONE</div><div id="hrCardio" style="font-weight:800;color:var(--secondary)">0 min</div></div>
+                <div style="padding:.75rem;background:var(--bg-card2);border-radius:10px"><div style="font-size:.7rem;color:var(--text-muted);margin-bottom:.2rem">FAT BURN</div><div id="hrFatBurn" style="font-weight:800;color:var(--blue)">0 min</div></div>
+              </div>
+            </div>
+            <div class="chart-container" style="height:130px;margin-top:1rem"><canvas id="hrChart"></canvas></div>
+          </div>
+
+          <!-- Weekly Summary -->
+          <div class="widget-card">
+            <div class="widget-header"><div class="widget-title"><i class="fas fa-calendar-week"></i> Week Summary</div></div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:.65rem 0;border-bottom:1px solid var(--border)"><span style="font-size:.88rem;color:var(--text-secondary)"><i class="fas fa-shoe-prints" style="color:var(--primary);width:18px"></i> Total Steps</span><strong id="wkSteps">0</strong></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:.65rem 0;border-bottom:1px solid var(--border)"><span style="font-size:.88rem;color:var(--text-secondary)"><i class="fas fa-fire-alt" style="color:var(--secondary);width:18px"></i> Calories Logged</span><strong id="wkCalories">0 kcal</strong></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:.65rem 0;border-bottom:1px solid var(--border)"><span style="font-size:.88rem;color:var(--text-secondary)"><i class="fas fa-road" style="color:var(--blue);width:18px"></i> Total Distance</span><strong id="wkDistance">0 km</strong></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:.65rem 0;border-bottom:1px solid var(--border)"><span style="font-size:.88rem;color:var(--text-secondary)"><i class="fas fa-stopwatch" style="color:var(--purple);width:18px"></i> Active Minutes</span><strong id="wkMinutes">0 min</strong></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:.65rem 0"><span style="font-size:.88rem;color:var(--text-secondary)"><i class="fas fa-dumbbell" style="color:var(--teal);width:18px"></i> Workouts</span><strong id="wkWorkouts">0 sessions</strong></div>
+            </div>
+          </div>
+
+          <!-- API integration hint -->
+          <div class="widget-card" style="background:linear-gradient(135deg,rgba(0,212,170,.06),rgba(91,140,255,.06));border-color:rgba(0,212,170,.2)">
+            <div style="text-align:center;padding:.5rem">
+              <i class="fas fa-mobile-alt" style="font-size:2rem;color:var(--primary);margin-bottom:.75rem;display:block"></i>
+              <h4 style="font-weight:700;margin-bottom:.5rem">Connect Fitness Devices</h4>
+              <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:1rem">Sync data from Google Fit, Apple Health, or your smartwatch for automatic tracking.</p>
+              <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap">
+                <button class="btn btn-outline btn-sm" onclick="Toast.info('Google Fit integration coming soon!')"><i class="fab fa-google"></i> Google Fit</button>
+                <button class="btn btn-outline btn-sm" onclick="Toast.info('Apple Health integration coming soon!')"><i class="fab fa-apple"></i> Apple Health</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/sensors.js"></script>
+  <script>
+    requireAuth();
+    const user = Auth.getCurrentUser();
+    const userId = user?.id;
+
+    // ── Initialise SensorManager with user weight ──
+    const weightKg = parseFloat(user?.weight) || 70;
+    SensorManager.init(weightKg);
+
+    // ── Timer ──
+    let _timerInterval = null;
+    function startTimer() {
+      const start = Date.now();
+      _timerInterval = setInterval(() => {
+        const s = Math.floor((Date.now() - start) / 1000);
+        document.getElementById('liveTime').textContent =
+          Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+      }, 1000);
+    }
+    function stopTimer() { clearInterval(_timerInterval); }
+
+    // ── Update live stat cards ──
+    SensorManager.on('steps', (v) => {
+      document.getElementById('liveSteps').textContent = v.toLocaleString();
+      document.getElementById('actSteps').textContent = v.toLocaleString();
+      if (v > 0) { document.getElementById('actStepsChange').className = 'stat-change up'; document.getElementById('actStepsChange').innerHTML = '<i class="fas fa-shoe-prints"></i> Live'; }
+    });
+    SensorManager.on('calories', (v) => {
+      document.getElementById('liveCal').textContent = v;
+      document.getElementById('actCalories').textContent = v;
+      if (v > 0) { document.getElementById('actCalChange').className = 'stat-change up'; document.getElementById('actCalChange').innerHTML = '<i class="fas fa-fire-alt"></i> Live'; }
+    });
+    SensorManager.on('distance', ({ distKm }) => {
+      document.getElementById('liveDist').textContent = distKm.toFixed(2);
+      document.getElementById('actDistance').textContent = distKm.toFixed(2) + ' km';
+      if (distKm > 0) { document.getElementById('actDistChange').className = 'stat-change up'; document.getElementById('actDistChange').innerHTML = '<i class="fas fa-road"></i> Live GPS'; }
+    });
+    SensorManager.on('heartRate', (bpm) => {
+      document.getElementById('liveHR').textContent = bpm;
+      document.getElementById('hrMainVal').textContent = bpm;
+      document.getElementById('hrStatus').textContent = bpm + ' bpm — Live';
+      document.getElementById('actMinutes') && (document.getElementById('actMinChange').innerHTML = '<i class="fas fa-heartbeat" style="color:var(--red)"></i> BLE');
+      document.getElementById('badgeHR').className = 'sensor-badge ok';
+      document.getElementById('badgeHR').innerHTML = '<i class="fas fa-heartbeat"></i> HR: ' + bpm + ' bpm';
+    });
+
+    // ── Start Tracking ──
+    document.getElementById('btnStartTracking').addEventListener('click', async function () {
+      this.disabled = true;
+      this.innerHTML = '<span class="spinner"></span> Starting...';
+      try {
+        const errs = await SensorManager.startTracking();
+        const status = SensorManager.getStatus();
+
+        document.getElementById('badgeAccel').className = 'sensor-badge ' + (status.stepSensor === 'active' ? 'ok' : 'err');
+        document.getElementById('badgeAccel').innerHTML = '<i class="fas fa-mobile-alt"></i> ' + (status.stepSensor === 'active' ? 'Accel: Live' : 'Accel: N/A');
+        document.getElementById('badgeGPS').className = 'sensor-badge ' + (status.gps === 'active' ? 'ok' : 'err');
+        document.getElementById('badgeGPS').innerHTML = '<i class="fas fa-satellite"></i> ' + (status.gps === 'active' ? 'GPS: Live' : 'GPS: N/A');
+
+        document.getElementById('trackingPulse').classList.add('active');
+        document.getElementById('trackingLabel').textContent = 'Live Tracking Active';
+        document.getElementById('trackingSubLabel').textContent = 'Sensors running — move your phone to count steps';
+        document.getElementById('trackingBanner').style.borderColor = 'rgba(0,212,170,.5)';
+
+        this.style.display = 'none';
+        document.getElementById('btnStopTracking').style.display = '';
+        startTimer();
+
+        if (errs.length) Toast.warning('Some sensors unavailable: ' + errs.join('; '));
+        else Toast.success('Tracking started! Walk around to count steps.');
+      } catch (e) {
+        Toast.error(e.message);
+        this.disabled = false;
+        this.innerHTML = '<i class="fas fa-play"></i> Start';
+      }
+    });
+
+    // ── Stop & Save ──
+    document.getElementById('btnStopTracking').addEventListener('click', function () {
+      stopTimer();
+      const session = SensorManager.stopTracking();
+      SensorManager.saveToStorage(userId);
+
+      document.getElementById('trackingPulse').classList.remove('active');
+      document.getElementById('trackingLabel').textContent = 'Session Saved ✓';
+      document.getElementById('trackingSubLabel').textContent =
+        session.steps + ' steps · ' + session.calories + ' kcal · ' + session.distKm.toFixed(2) + ' km · ' + session.duration + ' min';
+      document.getElementById('trackingBanner').style.borderColor = 'rgba(0,212,170,.25)';
+
+      this.style.display = 'none';
+      document.getElementById('btnStartTracking').style.display = '';
+      document.getElementById('btnStartTracking').disabled = false;
+      document.getElementById('btnStartTracking').innerHTML = '<i class="fas fa-redo"></i> New Session';
+
+      Toast.success('Session saved! ' + session.steps.toLocaleString() + ' steps, ' + session.calories + ' kcal');
+      rebuildCharts();
+    });
+
+    // ── Connect HR Monitor ──
+    document.getElementById('btnConnectHR').addEventListener('click', async function () {
+      this.disabled = true;
+      this.innerHTML = '<span class="spinner"></span> Pairing...';
+      try {
+        await SensorManager.connectHeartRate();
+        Toast.success('Heart rate monitor connected: ' + SensorManager.hrMonitor.deviceName);
+        this.innerHTML = '<i class="fas fa-heartbeat" style="color:var(--red)"></i> ' + (SensorManager.hrMonitor.deviceName || 'HR Connected');
+        document.getElementById('badgeHR').className = 'sensor-badge ok';
+      } catch (e) {
+        Toast.error(e.message);
+        this.disabled = false;
+        this.innerHTML = '<i class="fas fa-heartbeat" style="color:var(--red)"></i> HR Monitor';
+      }
+    });
+
+    // ── Load today's saved sensor data if any ──
+    const savedToday = SensorManager.loadFromStorage(userId);
+    if (savedToday) {
+      document.getElementById('actSteps').textContent = (savedToday.steps || 0).toLocaleString();
+      document.getElementById('actCalories').textContent = savedToday.calories || 0;
+      document.getElementById('actDistance').textContent = (savedToday.distKm || 0).toFixed(2) + ' km';
+      if (savedToday.heartRate) {
+        document.getElementById('hrMainVal').textContent = savedToday.heartRate;
+        document.getElementById('hrStatus').textContent = savedToday.heartRate + ' bpm — Last session';
+        document.getElementById('liveHR').textContent = savedToday.heartRate;
+      }
+    }
+
+    // ── Goals-based stats (fallback if no sensor session yet today) ──
+    const allGoals = Storage.get(STORAGE_KEYS.GOALS, []).filter(g => g.userId === userId);
+    if (!savedToday) {
+      const sg = allGoals.find(g => g.name.toLowerCase().includes('step'));
+      const cg = allGoals.find(g => g.name.toLowerCase().includes('calorie') && g.unit === 'kcal');
+      if (sg) document.getElementById('actSteps').textContent = sg.current.toLocaleString();
+      if (cg) document.getElementById('actCalories').textContent = cg.current;
+    }
+
+    // ── Weekly summary from activity storage ──
+    const weekHistory = SensorManager.getWeekHistory(userId);
+    const wkStepsTotal = weekHistory.reduce((s, d) => s + (d.steps || 0), 0);
+    const wkCalTotal   = weekHistory.reduce((s, d) => s + (d.calories || 0), 0);
+    const wkDistTotal  = +weekHistory.reduce((s, d) => s + (d.distKm || 0), 0).toFixed(2);
+    const allWorkouts  = Storage.get(STORAGE_KEYS.WORKOUTS, []).filter(w => w.userId === userId);
+    const wkWorkouts   = allWorkouts.filter(w => w.date >= DateUtils.daysAgo(6)).length;
+    const wkMin        = allWorkouts.filter(w => w.date >= DateUtils.daysAgo(6)).reduce((s, w) => s + (w.duration || 0), 0);
+
+    document.getElementById('wkSteps').textContent    = wkStepsTotal.toLocaleString();
+    document.getElementById('wkCalories').textContent = wkCalTotal + ' kcal';
+    document.getElementById('wkDistance').textContent = wkDistTotal + ' km';
+    document.getElementById('wkMinutes').textContent  = wkMin + ' min';
+    document.getElementById('wkWorkouts').textContent = wkWorkouts + ' session' + (wkWorkouts !== 1 ? 's' : '');
+
+    // Heart rate from profile if set
+    const hrVal = user?.heartRate || (savedToday?.heartRate) || 0;
+    if (hrVal) {
+      document.getElementById('hrMainVal').textContent = hrVal;
+      document.getElementById('hrStatus').textContent  = hrVal + ' bpm';
+    }
+    document.getElementById('hrResting').textContent  = user?.hrResting  ? user.hrResting  + ' bpm' : '— bpm';
+    document.getElementById('hrPeak').textContent     = user?.hrPeak     ? user.hrPeak     + ' bpm' : '— bpm';
+    document.getElementById('hrCardio').textContent   = wkMin > 20 ? Math.round(wkMin * 0.6) + ' min' : '0 min';
+    document.getElementById('hrFatBurn').textContent  = wkMin > 10 ? Math.round(wkMin * 0.4) + ' min' : '0 min';
+    document.getElementById('actMinutes').textContent = wkMin + ' min';
+
+    // ── Chart helpers ──
+    const chartOpts = {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{ color:'#64748b', font:{size:11} } },
+        y: { grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{ color:'#64748b', font:{size:11} }, beginAtZero: true }
+      }
+    };
+
+    let stepsChart, calChart, distChart, hrChart;
+
+    function rebuildCharts() {
+      const hist = SensorManager.getWeekHistory(userId);
+      const labels  = hist.map(d => { const dt = new Date(d.date + 'T00:00:00'); return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dt.getDay()]; });
+      const steps_  = hist.map(d => d.steps || 0);
+      const cals_   = hist.map(d => d.calories || 0);
+      const dists_  = hist.map(d => +(d.distKm || 0));
+      const hrs_    = hist.map(d => d.heartRate || 0);
+
+      if (stepsChart) stepsChart.destroy();
+      stepsChart = new Chart(document.getElementById('stepsChart'), {
+        type: 'bar',
+        data: { labels, datasets: [{ data: steps_, backgroundColor: labels.map((_,i) => i===6?'rgba(0,212,170,0.85)':'rgba(0,212,170,0.25)'), borderRadius:6, borderSkipped:false }] },
+        options: chartOpts
+      });
+
+      if (calChart) calChart.destroy();
+      calChart = new Chart(document.getElementById('caloriesChart'), {
+        type: 'line',
+        data: { labels, datasets: [{ data: cals_, borderColor:'#ff6b35', backgroundColor:'rgba(255,107,53,0.1)', fill:true, tension:0.4, pointBackgroundColor:'#ff6b35', pointRadius:4 }] },
+        options: chartOpts
+      });
+
+      if (distChart) distChart.destroy();
+      distChart = new Chart(document.getElementById('distanceChart'), {
+        type: 'line',
+        data: { labels, datasets: [{ data: dists_, borderColor:'#5b8cff', backgroundColor:'rgba(91,140,255,0.1)', fill:true, tension:0.4, pointBackgroundColor:'#5b8cff', pointRadius:4 }] },
+        options: chartOpts
+      });
+
+      if (hrChart) hrChart.destroy();
+      hrChart = new Chart(document.getElementById('hrChart'), {
+        type: 'line',
+        data: { labels, datasets: [{ data: hrs_, borderColor:'#ef4444', backgroundColor:'rgba(239,68,68,0.1)', fill:true, tension:0.4, pointBackgroundColor:'#ef4444', pointRadius:3 }] },
+        options: chartOpts
+      });
+    }
+
+    rebuildCharts();
+
+    document.querySelectorAll('.period-tab').forEach(btn => {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.period-tab').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

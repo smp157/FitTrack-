@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile – FitTrack</title>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:499"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><a href="../index.html" class="nav-logo"><i class="fas fa-bolt"></i><span>FitTrack</span></a></div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Main</div>
+        <a href="dashboard.html" class="sidebar-link"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+        <a href="activity.html" class="sidebar-link"><i class="fas fa-chart-line"></i><span>Activity</span></a>
+        <a href="workout-log.html" class="sidebar-link"><i class="fas fa-dumbbell"></i><span>Workout Log</span></a>
+        <a href="workout-planner.html" class="sidebar-link"><i class="fas fa-calendar-week"></i><span>Planner</span></a>
+        <a href="nutrition.html" class="sidebar-link"><i class="fas fa-apple-alt"></i><span>Nutrition</span></a>
+        <a href="goals.html" class="sidebar-link"><i class="fas fa-bullseye"></i><span>Goals</span></a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Explore</div>
+        <a href="exercise-library.html" class="sidebar-link"><i class="fas fa-book-open"></i><span>Exercise Library</span></a>
+        <a href="blog.html" class="sidebar-link"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+        <a href="membership.html" class="sidebar-link"><i class="fas fa-crown"></i><span>Membership</span></a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Account</div>
+        <a href="profile.html" class="sidebar-link active"><i class="fas fa-user-circle"></i><span>Profile</span></a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.5rem;border-radius:10px;background:var(--bg-card2);margin-bottom:.75rem">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff" id="sidebarUserAvatar">A</div>
+        <div style="overflow:hidden;flex:1"><div style="font-size:.85rem;font-weight:700" id="sidebarUserName">User</div><div style="font-size:.7rem;color:var(--text-muted)" id="sidebarUserEmail"></div></div>
+      </div>
+      <button class="btn btn-outline btn-sm" style="width:100%;justify-content:center" data-logout><i class="fas fa-sign-out-alt"></i><span> Logout</span></button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="dashboard-header">
+      <div style="display:flex;align-items:center;gap:1rem">
+        <button id="menuToggle" style="background:none;border:none;color:var(--text-secondary);font-size:1.2rem;cursor:pointer;padding:.4rem;border-radius:8px"><i class="fas fa-bars"></i></button>
+        <div><div class="page-title">My Profile</div><div class="page-subtitle">Manage your account and personal information</div></div>
+      </div>
+      <button class="btn btn-primary" id="saveProfileBtn"><i class="fas fa-save"></i> Save Changes</button>
+    </header>
+
+    <div class="dashboard-content">
+      <div style="display:grid;grid-template-columns:300px 1fr;gap:1.5rem;align-items:start">
+        <!-- Profile Card -->
+        <div>
+          <div class="widget-card" style="text-align:center">
+            <div style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--blue));display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:900;color:#fff;margin:0 auto 1rem;box-shadow:0 0 30px rgba(0,212,170,.3)" id="profileAvatar">A</div>
+            <h3 id="profileName" style="font-size:1.25rem;font-weight:800;margin-bottom:.25rem">User</h3>
+            <p id="profileEmail" style="color:var(--text-muted);font-size:.85rem;margin-bottom:1rem">user@email.com</p>
+            <span class="badge badge-green" id="profileGoalBadge">General Fitness</span>
+            <hr style="border:none;border-top:1px solid var(--border);margin:1.25rem 0" />
+            <div style="display:flex;justify-content:space-around">
+              <div style="text-align:center"><div style="font-size:1.5rem;font-weight:900;color:var(--primary)" id="profileWorkoutCount">0</div><div style="font-size:.72rem;color:var(--text-muted)">Workouts</div></div>
+              <div style="text-align:center"><div style="font-size:1.5rem;font-weight:900;color:var(--secondary)" id="profileGoalCount">0</div><div style="font-size:.72rem;color:var(--text-muted)">Goals</div></div>
+              <div style="text-align:center"><div style="font-size:1.5rem;font-weight:900;color:var(--blue)">7</div><div style="font-size:.72rem;color:var(--text-muted)">Day Streak</div></div>
+            </div>
+            <hr style="border:none;border-top:1px solid var(--border);margin:1.25rem 0" />
+            <div style="font-size:.78rem;color:var(--text-muted)">Member since <span id="memberSince">—</span></div>
+          </div>
+
+          <!-- BMI Card -->
+          <div class="widget-card" style="margin-top:1rem">
+            <div class="widget-header"><div class="widget-title"><i class="fas fa-weight"></i> Body Stats</div></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+              <div style="background:var(--bg-card2);padding:.85rem;border-radius:10px;text-align:center">
+                <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:.3rem">BMI</div>
+                <div style="font-size:1.5rem;font-weight:900;color:var(--primary)" id="bmiValue">—</div>
+                <div style="font-size:.7rem;color:var(--text-muted)" id="bmiCategory">—</div>
+              </div>
+              <div style="background:var(--bg-card2);padding:.85rem;border-radius:10px;text-align:center">
+                <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:.3rem">TDEE</div>
+                <div style="font-size:1.5rem;font-weight:900;color:var(--secondary)" id="tdeeValue">—</div>
+                <div style="font-size:.7rem;color:var(--text-muted)">kcal/day</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Form -->
+        <div>
+          <div class="widget-card">
+            <div class="widget-header"><div class="widget-title"><i class="fas fa-user-edit"></i> Personal Information</div></div>
+            <form id="profileForm" novalidate>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="pName">Full Name *</label>
+                  <input type="text" id="pName" class="form-control" /><span class="form-error"></span>
+                </div>
+                <div class="form-group">
+                  <label for="pEmail">Email Address *</label>
+                  <input type="email" id="pEmail" class="form-control" /><span class="form-error"></span>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="pAge">Age</label>
+                  <input type="number" id="pAge" class="form-control" min="10" max="100" />
+                </div>
+                <div class="form-group">
+                  <label for="pGender">Gender</label>
+                  <select id="pGender" class="form-control">
+                    <option value="">Select...</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="non-binary">Non-binary</option>
+                    <option value="prefer-not-to-say">Prefer not to say</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="pHeight">Height (cm)</label>
+                  <input type="number" id="pHeight" class="form-control" min="100" max="250" />
+                </div>
+                <div class="form-group">
+                  <label for="pWeight">Weight (kg)</label>
+                  <input type="number" id="pWeight" class="form-control" min="30" max="300" step="0.1" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="pGoal">Fitness Goal</label>
+                  <select id="pGoal" class="form-control">
+                    <option value="general">General Fitness</option>
+                    <option value="weight-loss">Weight Loss</option>
+                    <option value="muscle-gain">Muscle Gain</option>
+                    <option value="endurance">Endurance</option>
+                    <option value="flexibility">Flexibility</option>
+                    <option value="sports-performance">Sports Performance</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="pActivity">Activity Level</label>
+                  <select id="pActivity" class="form-control">
+                    <option value="sedentary">Sedentary</option>
+                    <option value="light">Lightly Active</option>
+                    <option value="moderate">Moderately Active</option>
+                    <option value="very-active">Very Active</option>
+                    <option value="extra-active">Extra Active</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Change Password -->
+          <div class="widget-card" style="margin-top:1rem">
+            <div class="widget-header"><div class="widget-title"><i class="fas fa-lock"></i> Change Password</div></div>
+            <form id="passwordForm" novalidate>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="currentPw">Current Password</label>
+                  <input type="password" id="currentPw" class="form-control" placeholder="••••••••" />
+                </div>
+                <div class="form-group">
+                  <label for="newPw">New Password</label>
+                  <input type="password" id="newPw" class="form-control" placeholder="Min. 8 characters" />
+                </div>
+              </div>
+              <div style="display:flex;justify-content:flex-end">
+                <button type="submit" class="btn btn-secondary"><i class="fas fa-key"></i> Update Password</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Danger Zone -->
+          <div class="widget-card" style="margin-top:1rem;border-color:rgba(239,68,68,.2)">
+            <div class="widget-header"><div class="widget-title" style="color:var(--red)"><i class="fas fa-exclamation-triangle"></i> Danger Zone</div></div>
+            <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:1rem">Permanently delete your account and all associated data. This action cannot be undone.</p>
+            <button class="btn btn-danger btn-sm" onclick="if(confirm('Are you sure? This will delete all your data permanently!')) { Storage.remove(STORAGE_KEYS.CURRENT_USER); window.location.href=\'../index.html\'; }"><i class="fas fa-trash"></i> Delete Account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/main.js"></script>
+  <script>
+    requireAuth();
+    const user = Auth.getCurrentUser();
+    if (!user) window.location.href='login.html';
+
+    function calcBMI(h, w) {
+      if (!h || !w) return null;
+      return (w / ((h/100)**2)).toFixed(1);
+    }
+
+    function bmiCategory(bmi) {
+      if (bmi < 18.5) return 'Underweight';
+      if (bmi < 25) return 'Normal';
+      if (bmi < 30) return 'Overweight';
+      return 'Obese';
+    }
+
+    function calcTDEE(age, gender, h, w, activity) {
+      if (!age || !h || !w) return null;
+      let bmr = gender==='female'
+        ? 447.593 + (9.247*w) + (3.098*h) - (4.330*age)
+        : 88.362 + (13.397*w) + (4.799*h) - (5.677*age);
+      const m = {sedentary:1.2,light:1.375,moderate:1.55,'very-active':1.725,'extra-active':1.9};
+      return Math.round(bmr * (m[activity]||1.55));
+    }
+
+    function populateForm() {
+      document.getElementById('pName').value = user.name || '';
+      document.getElementById('pEmail').value = user.email || '';
+      document.getElementById('pAge').value = user.age || '';
+      document.getElementById('pGender').value = user.gender || '';
+      document.getElementById('pHeight').value = user.height || '';
+      document.getElementById('pWeight').value = user.weight || '';
+      document.getElementById('pGoal').value = user.fitnessGoal || 'general';
+      document.getElementById('pActivity').value = user.activityLevel || 'moderate';
+
+      document.getElementById('profileName').textContent = user.name;
+      document.getElementById('profileEmail').textContent = user.email;
+      document.getElementById('profileAvatar').textContent = user.avatar || user.name.charAt(0).toUpperCase();
+      const goalLabels = {general:'General Fitness','weight-loss':'Weight Loss','muscle-gain':'Muscle Gain',endurance:'Endurance',flexibility:'Flexibility','sports-performance':'Sports Performance'};
+      document.getElementById('profileGoalBadge').textContent = goalLabels[user.fitnessGoal]||'General Fitness';
+      document.getElementById('memberSince').textContent = user.joinedDate ? DateUtils.format(user.joinedDate,{year:'numeric',month:'long'}) : '—';
+
+      const bmi = calcBMI(user.height, user.weight);
+      document.getElementById('bmiValue').textContent = bmi || '—';
+      document.getElementById('bmiCategory').textContent = bmi ? bmiCategory(parseFloat(bmi)) : '—';
+
+      const tdee = calcTDEE(user.age, user.gender, user.height, user.weight, user.activityLevel);
+      document.getElementById('tdeeValue').textContent = tdee || '—';
+
+      const workouts = Storage.get(STORAGE_KEYS.WORKOUTS,[]).filter(w=>w.userId===user.id);
+      const goals = Storage.get(STORAGE_KEYS.GOALS,[]).filter(g=>g.userId===user.id);
+      document.getElementById('profileWorkoutCount').textContent = workouts.length;
+      document.getElementById('profileGoalCount').textContent = goals.length;
+    }
+
+    document.getElementById('saveProfileBtn').addEventListener('click',()=>{
+      const name = document.getElementById('pName').value.trim();
+      const email = document.getElementById('pEmail').value.trim();
+      if (!name || !email) { Toast.error('Name and email are required.'); return; }
+      const updates = {
+        name, email, avatar: name.charAt(0).toUpperCase(),
+        age: document.getElementById('pAge').value,
+        gender: document.getElementById('pGender').value,
+        height: document.getElementById('pHeight').value,
+        weight: document.getElementById('pWeight').value,
+        fitnessGoal: document.getElementById('pGoal').value,
+        activityLevel: document.getElementById('pActivity').value,
+      };
+      const updated = Auth.updateProfile(updates);
+      if (updated) {
+        Object.assign(user, updated);
+        Toast.success('Profile updated successfully!');
+        populateForm();
+      }
+    });
+
+    document.getElementById('passwordForm').addEventListener('submit',function(e){
+      e.preventDefault();
+      const curr = document.getElementById('currentPw').value;
+      const newPw = document.getElementById('newPw').value;
+      if (!curr || !newPw) { Toast.error('Please fill in both password fields.'); return; }
+      if (newPw.length < 8) { Toast.error('New password must be at least 8 characters.'); return; }
+      const users = Storage.get(STORAGE_KEYS.USERS,[]);
+      const u = users.find(x=>x.id===user.id && x.password===Auth._hash(curr));
+      if (!u) { Toast.error('Current password is incorrect.'); return; }
+      u.password = Auth._hash(newPw);
+      Storage.set(STORAGE_KEYS.USERS,users);
+      Toast.success('Password updated successfully!');
+      this.reset();
+    });
+
+    populateForm();
+  </script>
+</body>
+</html>

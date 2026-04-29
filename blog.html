@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog – FitTrack</title>
+  <meta name="description" content="Read expert fitness tips, workout guides, nutrition advice, and success stories on the FitTrack blog." />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="inner-page">
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo"><i class="fas fa-bolt"></i><span>FitTrack</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="blog.html" class="active">Blog</a></li>
+        <li><a href="exercise-library.html">Exercises</a></li>
+        <li><a href="membership.html">Membership</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-outline" id="loginBtn">Login</a>
+        <a href="signup.html" class="btn btn-primary">Get Started</a>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-tag">Blog</span>
+      <h1>Fitness Tips & <span class="gradient-text">Expert Guides</span></h1>
+      <p>Evidence-based articles, workout guides, and nutrition advice to help you reach your goals faster.</p>
+    </div>
+  </section>
+
+  <section class="blog-section">
+    <div class="container">
+      <div class="blog-filters">
+        <button class="filter-btn active" data-cat="all">All Posts</button>
+        <button class="filter-btn" data-cat="Nutrition">Nutrition</button>
+        <button class="filter-btn" data-cat="Workout">Workout</button>
+        <button class="filter-btn" data-cat="Beginner">Beginner</button>
+        <button class="filter-btn" data-cat="Advanced">Advanced</button>
+        <button class="filter-btn" data-cat="Mindset">Mindset</button>
+      </div>
+
+      <div class="blog-grid" id="blogGrid"></div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none;padding-top:0"><p>&copy; 2026 FitTrack. All rights reserved.</p></div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    const POSTS = [
+      { id:1, title:'The Ultimate Beginner\'s Guide to Strength Training', category:'Beginner', date:'Apr 20, 2026', author:'Coach Mike', authorInit:'M', excerpt:'Starting strength training can be intimidating. This complete guide breaks down everything you need to know — from picking exercises to proper form and progressive overload.', readTime:'8 min', emoji:'🏋️', featured:true },
+      { id:2, title:'How to Calculate Your Daily Protein Needs', category:'Nutrition', date:'Apr 18, 2026', author:'Dr. Sarah Lee', authorInit:'S', excerpt:'Protein is crucial for muscle repair and growth. Learn exactly how much you need based on your weight, goals, and activity level.', readTime:'5 min', emoji:'🥩', featured:false },
+      { id:3, title:'5 HIIT Workouts You Can Do in 20 Minutes', category:'Workout', date:'Apr 15, 2026', author:'Coach Alex', authorInit:'A', excerpt:'No time? No problem. These 5 intense HIIT circuits deliver maximum results in just 20 minutes, no equipment needed.', readTime:'6 min', emoji:'⚡', featured:false },
+      { id:4, title:'Mastering Progressive Overload for Muscle Gain', category:'Advanced', date:'Apr 12, 2026', author:'Coach Mike', authorInit:'M', excerpt:'Progressive overload is the #1 principle behind continuous muscle and strength gains. Learn how to implement it correctly.', readTime:'10 min', emoji:'📈', featured:false },
+      { id:5, title:'The Mental Side of Fitness: Staying Motivated', category:'Mindset', date:'Apr 10, 2026', author:'Dr. James Park', authorInit:'J', excerpt:'Half the fitness battle is in your head. Discover the psychology techniques elite athletes use to stay consistent and push through plateaus.', readTime:'7 min', emoji:'🧠', featured:false },
+      { id:6, title:'Meal Prep 101: A Week of Clean Eating in 2 Hours', category:'Nutrition', date:'Apr 8, 2026', author:'Chef Elena', authorInit:'E', excerpt:'Meal prepping is the secret weapon of successful fitness enthusiasts. This step-by-step guide shows you how to plan and prep an entire week.', readTime:'9 min', emoji:'🥗', featured:false },
+      { id:7, title:'The Science of Recovery: Sleep, Rest, and Muscle Growth', category:'Advanced', date:'Apr 5, 2026', author:'Dr. Sarah Lee', authorInit:'S', excerpt:'Muscles grow when you rest, not when you train. Learn the science behind sleep, active recovery, and why rest days are as important as workout days.', readTime:'8 min', emoji:'😴', featured:false },
+      { id:8, title:'Cardio vs Weights: What\'s Better for Fat Loss?', category:'Workout', date:'Apr 1, 2026', author:'Coach Alex', authorInit:'A', excerpt:'The eternal debate. We break down the science to tell you which is more effective for fat loss — and why combining both is the real answer.', readTime:'6 min', emoji:'🏃', featured:false },
+    ];
+
+    let activeCategory = 'all';
+    const catColors = { Nutrition:'#00d4aa', Workout:'#ff6b35', Beginner:'#5b8cff', Advanced:'#8b5cf6', Mindset:'#f59e0b' };
+
+    function renderBlog() {
+      const posts = activeCategory==='all' ? POSTS : POSTS.filter(p=>p.category===activeCategory);
+      const grid = document.getElementById('blogGrid');
+      grid.innerHTML = posts.map((p,i) => {
+        const isFeatured = p.featured && activeCategory==='all';
+        return `<div class="blog-card ${isFeatured?'featured':''}">
+          <div class="blog-img" style="background:linear-gradient(135deg,${catColors[p.category]||'#00d4aa'}22,var(--bg-dark))">
+            <span style="font-size:${isFeatured?'5':'3.5'}rem">${p.emoji}</span>
+          </div>
+          <div class="blog-content">
+            <div class="blog-meta">
+              <span class="blog-category" style="color:${catColors[p.category]||'var(--primary)'}">${p.category}</span>
+              <span class="blog-date">${p.date}</span>
+              <span class="blog-date"><i class="fas fa-clock"></i> ${p.readTime}</span>
+            </div>
+            <h3>${p.title}</h3>
+            <p>${p.excerpt}</p>
+            <div class="blog-footer">
+              <div class="blog-author">
+                <div class="blog-author-avatar">${p.authorInit}</div>
+                <span>${p.author}</span>
+              </div>
+              <a href="#" class="read-more" onclick="Toast.info('Full article coming soon!');return false">Read More <i class="fas fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    document.querySelectorAll('[data-cat]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('[data-cat]').forEach(b=>b.classList.remove('active'));
+        this.classList.add('active');
+        activeCategory = this.dataset.cat;
+        renderBlog();
+      });
+    });
+
+    renderBlog();
+  </script>
+</body>
+</html>

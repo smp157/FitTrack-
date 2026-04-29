@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workout Log – FitTrack</title>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/fixes.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:499"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="nav-logo"><i class="fas fa-bolt"></i><span>FitTrack</span></a>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Main</div>
+        <a href="dashboard.html" class="sidebar-link"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+        <a href="activity.html" class="sidebar-link"><i class="fas fa-chart-line"></i><span>Activity</span></a>
+        <a href="workout-log.html" class="sidebar-link active"><i class="fas fa-dumbbell"></i><span>Workout Log</span></a>
+        <a href="workout-planner.html" class="sidebar-link"><i class="fas fa-calendar-week"></i><span>Planner</span></a>
+        <a href="nutrition.html" class="sidebar-link"><i class="fas fa-apple-alt"></i><span>Nutrition</span></a>
+        <a href="goals.html" class="sidebar-link"><i class="fas fa-bullseye"></i><span>Goals</span></a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Explore</div>
+        <a href="exercise-library.html" class="sidebar-link"><i class="fas fa-book-open"></i><span>Exercise Library</span></a>
+        <a href="blog.html" class="sidebar-link"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+        <a href="membership.html" class="sidebar-link"><i class="fas fa-crown"></i><span>Membership</span></a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Account</div>
+        <a href="profile.html" class="sidebar-link"><i class="fas fa-user-circle"></i><span>Profile</span></a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.5rem;border-radius:10px;background:var(--bg-card2);margin-bottom:.75rem">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;flex-shrink:0" id="sidebarUserAvatar">A</div>
+        <div style="overflow:hidden;flex:1">
+          <div style="font-size:.85rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="sidebarUserName">User</div>
+          <div style="font-size:.7rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="sidebarUserEmail"></div>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-sm" style="width:100%;justify-content:center" data-logout>
+        <i class="fas fa-sign-out-alt"></i><span> Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="dashboard-header">
+      <div style="display:flex;align-items:center;gap:1rem">
+        <button id="menuToggle" style="background:none;border:none;color:var(--text-secondary);font-size:1.2rem;cursor:pointer;padding:.4rem;border-radius:8px"><i class="fas fa-bars"></i></button>
+        <div>
+          <div class="page-title">Workout Log</div>
+          <div class="page-subtitle">Track every rep, set, and weight</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" data-modal-target="addWorkoutModal">
+        <i class="fas fa-plus"></i> Log Workout
+      </button>
+    </header>
+
+    <div class="dashboard-content">
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card green">
+          <div class="stat-info">
+            <div class="stat-label">Total Workouts</div>
+            <div class="stat-value" id="totalWorkouts">0</div>
+            <div class="stat-change up">All time</div>
+          </div>
+          <div class="stat-icon green"><i class="fas fa-dumbbell"></i></div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-info">
+            <div class="stat-label">This Week</div>
+            <div class="stat-value" id="weekWorkouts">0</div>
+            <div class="stat-change up">Sessions</div>
+          </div>
+          <div class="stat-icon orange"><i class="fas fa-calendar-week"></i></div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-info">
+            <div class="stat-label">Total Duration</div>
+            <div class="stat-value" id="totalDuration">0 min</div>
+            <div class="stat-change up">All time</div>
+          </div>
+          <div class="stat-icon blue"><i class="fas fa-clock"></i></div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-info">
+            <div class="stat-label">Avg Duration</div>
+            <div class="stat-value" id="avgDuration">0 min</div>
+            <div class="stat-change up">Per session</div>
+          </div>
+          <div class="stat-icon purple"><i class="fas fa-chart-bar"></i></div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div>
+          <!-- Workout Chart -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="widget-title"><i class="fas fa-chart-bar"></i> Workout Frequency</div>
+            </div>
+            <div class="chart-container" style="height:200px">
+              <canvas id="workoutChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Workout Table -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="widget-title"><i class="fas fa-list"></i> All Workouts</div>
+              <input type="text" id="workoutSearch" class="form-control" style="max-width:200px;padding:.4rem .75rem;font-size:.85rem" placeholder="Search exercises..." />
+            </div>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Exercise</th>
+                    <th>Category</th>
+                    <th>Sets</th>
+                    <th>Reps</th>
+                    <th>Weight</th>
+                    <th>Duration</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="workoutTableBody">
+                  <tr><td colspan="8"><div class="empty-state"><i class="fas fa-dumbbell"></i><h3>No workouts logged yet</h3><p>Click "Log Workout" to add your first workout.</p></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <!-- Category breakdown -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="widget-title"><i class="fas fa-chart-pie"></i> By Category</div>
+            </div>
+            <div class="chart-container" style="height:200px">
+              <canvas id="categoryChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Personal Bests -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="widget-title"><i class="fas fa-trophy"></i> Personal Bests</div>
+            </div>
+            <div id="personalBests">
+              <div class="empty-state" style="padding:1.5rem"><i class="fas fa-trophy"></i><p>Log workouts to track PRs</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Add Workout Modal -->
+  <div class="modal-overlay" id="addWorkoutModal">
+    <div class="modal" style="max-width:560px">
+      <div class="modal-header">
+        <h3 id="workoutModalTitle">Log Workout</h3>
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="workoutForm" novalidate>
+        <input type="hidden" id="editWorkoutId" />
+        <div class="form-group">
+          <label for="exerciseName">Exercise Name *</label>
+          <input type="text" id="exerciseName" class="form-control" placeholder="e.g. Bench Press" list="exerciseSuggestions" />
+          <datalist id="exerciseSuggestions">
+            <option value="Bench Press"><option value="Squats"><option value="Deadlift">
+            <option value="Pull-ups"><option value="Push-ups"><option value="Running">
+            <option value="Cycling"><option value="Plank"><option value="Shoulder Press">
+            <option value="Lunges"><option value="Bicep Curls"><option value="Tricep Dips">
+          </datalist>
+          <span class="form-error"></span>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="exerciseCategory">Category</label>
+            <select id="exerciseCategory" class="form-control">
+              <option value="Strength">Strength</option>
+              <option value="Cardio">Cardio</option>
+              <option value="Core">Core</option>
+              <option value="Flexibility">Flexibility</option>
+              <option value="HIIT">HIIT</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="workoutDate">Date *</label>
+            <input type="date" id="workoutDate" class="form-control" />
+            <span class="form-error"></span>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="exerciseSets">Sets</label>
+            <input type="number" id="exerciseSets" class="form-control" placeholder="3" min="1" max="20" />
+          </div>
+          <div class="form-group">
+            <label for="exerciseReps">Reps</label>
+            <input type="number" id="exerciseReps" class="form-control" placeholder="10" min="1" max="200" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="exerciseWeight">Weight (kg)</label>
+            <input type="number" id="exerciseWeight" class="form-control" placeholder="60" min="0" step="0.5" />
+          </div>
+          <div class="form-group">
+            <label for="exerciseDuration">Duration (min)</label>
+            <input type="number" id="exerciseDuration" class="form-control" placeholder="30" min="1" max="300" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="workoutNotes">Notes</label>
+          <textarea id="workoutNotes" class="form-control" rows="2" placeholder="How did it go?"></textarea>
+        </div>
+        <div style="display:flex;gap:.75rem;justify-content:flex-end">
+          <button type="button" class="btn btn-ghost" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Workout</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    requireAuth();
+    const user = Auth.getCurrentUser();
+    const userId = user?.id;
+
+    document.getElementById('workoutDate').value = DateUtils.today();
+
+    function getWorkouts() {
+      return Storage.get(STORAGE_KEYS.WORKOUTS, []).filter(w => w.userId === userId);
+    }
+
+    function renderTable(list) {
+      const tbody = document.getElementById('workoutTableBody');
+      if (!list.length) {
+        tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><i class="fas fa-dumbbell"></i><h3>No workouts logged</h3><p>Start logging to see your history.</p></div></td></tr>';
+        return;
+      }
+      const sorted = [...list].sort((a,b) => new Date(b.date) - new Date(a.date));
+      tbody.innerHTML = sorted.map(w => `
+        <tr>
+          <td><strong>${w.exercise}</strong></td>
+          <td><span class="badge badge-green">${w.category || 'General'}</span></td>
+          <td>${w.sets || '—'}</td>
+          <td>${w.reps || '—'}</td>
+          <td>${w.weight ? w.weight + ' kg' : '—'}</td>
+          <td>${w.duration ? w.duration + ' min' : '—'}</td>
+          <td>${DateUtils.format(w.date)}</td>
+          <td>
+            <button class="btn btn-ghost btn-icon" onclick="editWorkout('${w.id}')" title="Edit"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-icon" style="background:rgba(239,68,68,.1);color:var(--red);border:none" onclick="deleteWorkout('${w.id}')" title="Delete"><i class="fas fa-trash"></i></button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderStats(list) {
+      document.getElementById('totalWorkouts').textContent = list.length;
+      const weekStart = DateUtils.startOfWeek();
+      const weekCount = list.filter(w => w.date >= weekStart).length;
+      document.getElementById('weekWorkouts').textContent = weekCount;
+      const total = list.reduce((s,w) => s + (parseInt(w.duration)||0), 0);
+      document.getElementById('totalDuration').textContent = total + ' min';
+      document.getElementById('avgDuration').textContent = list.length ? Math.round(total / list.length) + ' min' : '0 min';
+    }
+
+    function renderCharts(list) {
+      // Weekly frequency
+      const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+      const dayCounts = new Array(7).fill(0);
+      list.forEach(w => { const d = new Date(w.date).getDay(); dayCounts[(d+6)%7]++; });
+      const existingChart = Chart.getChart('workoutChart');
+      if (existingChart) existingChart.destroy();
+      new Chart(document.getElementById('workoutChart'), {
+        type: 'bar',
+        data: { labels: days, datasets: [{ data: dayCounts, backgroundColor: 'rgba(0,212,170,0.6)', borderRadius: 6, borderSkipped: false }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+          scales: { x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#64748b' } },
+                    y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#64748b', stepSize: 1 } } } }
+      });
+
+      // Category
+      const cats = {};
+      list.forEach(w => { cats[w.category||'Other'] = (cats[w.category||'Other']||0)+1; });
+      const catLabels = Object.keys(cats);
+      const catData = Object.values(cats);
+      const colors = ['#00d4aa','#ff6b35','#5b8cff','#8b5cf6','#14b8a6','#f59e0b'];
+      const existing2 = Chart.getChart('categoryChart');
+      if (existing2) existing2.destroy();
+      if (catLabels.length) {
+        new Chart(document.getElementById('categoryChart'), {
+          type: 'doughnut',
+          data: { labels: catLabels, datasets: [{ data: catData, backgroundColor: colors, borderWidth: 0, hoverOffset: 4 }] },
+          options: { responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', padding: 12, font: { size: 11 } } } } }
+        });
+      }
+    }
+
+    function renderPRs(list) {
+      const prs = {};
+      list.forEach(w => {
+        if (w.weight) {
+          if (!prs[w.exercise] || w.weight > prs[w.exercise]) prs[w.exercise] = w.weight;
+        }
+      });
+      const el = document.getElementById('personalBests');
+      const entries = Object.entries(prs);
+      if (!entries.length) {
+        el.innerHTML = '<div class="empty-state" style="padding:1.5rem"><i class="fas fa-trophy"></i><p>Log workouts with weight to track PRs</p></div>';
+        return;
+      }
+      el.innerHTML = entries.sort((a,b) => b[1]-a[1]).slice(0,5).map(([name, kg]) => `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--border)">
+          <div style="font-size:.9rem;font-weight:600">${name}</div>
+          <div class="badge badge-orange"><i class="fas fa-trophy"></i> ${kg} kg</div>
+        </div>
+      `).join('');
+    }
+
+    function refresh() {
+      const list = getWorkouts();
+      renderTable(list);
+      renderStats(list);
+      renderCharts(list);
+      renderPRs(list);
+    }
+
+    // Search
+    document.getElementById('workoutSearch').addEventListener('input', function() {
+      const q = this.value.toLowerCase();
+      const filtered = getWorkouts().filter(w => w.exercise.toLowerCase().includes(q));
+      renderTable(filtered);
+    });
+
+    // Edit
+    window.editWorkout = function(id) {
+      const all = Storage.get(STORAGE_KEYS.WORKOUTS, []);
+      const w = all.find(x => String(x.id) === String(id));
+      if (!w) return;
+      document.getElementById('workoutModalTitle').textContent = 'Edit Workout';
+      document.getElementById('editWorkoutId').value = w.id;
+      document.getElementById('exerciseName').value = w.exercise;
+      document.getElementById('exerciseCategory').value = w.category || 'Strength';
+      document.getElementById('workoutDate').value = w.date;
+      document.getElementById('exerciseSets').value = w.sets || '';
+      document.getElementById('exerciseReps').value = w.reps || '';
+      document.getElementById('exerciseWeight').value = w.weight || '';
+      document.getElementById('exerciseDuration').value = w.duration || '';
+      document.getElementById('workoutNotes').value = w.notes || '';
+      Modal.show('addWorkoutModal');
+    };
+
+    // Delete
+    window.deleteWorkout = function(id) {
+      if (!confirm('Delete this workout entry?')) return;
+      const all = Storage.get(STORAGE_KEYS.WORKOUTS, []);
+      Storage.set(STORAGE_KEYS.WORKOUTS, all.filter(x => String(x.id) !== String(id)));
+      Toast.success('Workout deleted.');
+      refresh();
+    };
+
+    // Form
+    document.getElementById('workoutForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const valid = Validator.validateForm(this, {
+        exerciseName: [Validator.rules.required],
+        workoutDate: [Validator.rules.required],
+      });
+      if (!valid) return;
+
+      const editId = document.getElementById('editWorkoutId').value;
+      const entry = {
+        id: editId || Date.now(),
+        userId,
+        exercise: document.getElementById('exerciseName').value.trim(),
+        category: document.getElementById('exerciseCategory').value,
+        date: document.getElementById('workoutDate').value,
+        sets: parseInt(document.getElementById('exerciseSets').value) || 0,
+        reps: parseInt(document.getElementById('exerciseReps').value) || 0,
+        weight: parseFloat(document.getElementById('exerciseWeight').value) || 0,
+        duration: parseInt(document.getElementById('exerciseDuration').value) || 0,
+        notes: document.getElementById('workoutNotes').value.trim(),
+        createdAt: new Date().toISOString(),
+      };
+
+      const all = Storage.get(STORAGE_KEYS.WORKOUTS, []);
+      if (editId) {
+        const idx = all.findIndex(x => String(x.id) === String(editId));
+        if (idx !== -1) all[idx] = entry;
+      } else {
+        all.push(entry);
+      }
+      Storage.set(STORAGE_KEYS.WORKOUTS, all);
+      Toast.success(editId ? 'Workout updated!' : 'Workout logged!');
+      Modal.hide('addWorkoutModal');
+      this.reset();
+      document.getElementById('editWorkoutId').value = '';
+      document.getElementById('workoutModalTitle').textContent = 'Log Workout';
+      document.getElementById('workoutDate').value = DateUtils.today();
+      refresh();
+    });
+
+    document.querySelector('[data-modal-target="addWorkoutModal"]').addEventListener('click', () => {
+      document.getElementById('workoutModalTitle').textContent = 'Log Workout';
+      document.getElementById('editWorkoutId').value = '';
+      document.getElementById('workoutForm').reset();
+      document.getElementById('workoutDate').value = DateUtils.today();
+    });
+
+    refresh();
+  </script>
+</body>
+</html>

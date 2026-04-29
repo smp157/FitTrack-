@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – FitTrack</title>
+  <meta name="description" content="Your personal FitTrack fitness dashboard with activity stats, workout logs, nutrition summary, and goals." />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/fixes.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:499;transition:opacity .3s"></div>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="nav-logo">
+        <i class="fas fa-bolt"></i>
+        <span>FitTrack</span>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Main</div>
+        <a href="dashboard.html" class="sidebar-link"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+        <a href="activity.html" class="sidebar-link"><i class="fas fa-chart-line"></i><span>Activity</span></a>
+        <a href="workout-log.html" class="sidebar-link"><i class="fas fa-dumbbell"></i><span>Workout Log</span></a>
+        <a href="workout-planner.html" class="sidebar-link"><i class="fas fa-calendar-week"></i><span>Planner</span></a>
+        <a href="nutrition.html" class="sidebar-link"><i class="fas fa-apple-alt"></i><span>Nutrition</span></a>
+        <a href="goals.html" class="sidebar-link"><i class="fas fa-bullseye"></i><span>Goals</span></a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Explore</div>
+        <a href="exercise-library.html" class="sidebar-link"><i class="fas fa-book-open"></i><span>Exercise Library</span></a>
+        <a href="blog.html" class="sidebar-link"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+        <a href="membership.html" class="sidebar-link"><i class="fas fa-crown"></i><span>Membership</span></a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Account</div>
+        <a href="profile.html" class="sidebar-link"><i class="fas fa-user-circle"></i><span>Profile</span></a>
+        <a href="contact.html" class="sidebar-link"><i class="fas fa-envelope"></i><span>Contact</span></a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.5rem;border-radius:10px;background:var(--bg-card2);margin-bottom:.75rem">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;flex-shrink:0" id="sidebarUserAvatar">A</div>
+        <div style="overflow:hidden;flex:1">
+          <div style="font-size:.85rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="sidebarUserName">User</div>
+          <div style="font-size:.7rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="sidebarUserEmail">user@email.com</div>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-sm" style="width:100%;justify-content:center" data-logout>
+        <i class="fas fa-sign-out-alt"></i><span> Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="dashboard-header">
+      <div style="display:flex;align-items:center;gap:1rem">
+        <button id="menuToggle" style="background:none;border:none;color:var(--text-secondary);font-size:1.2rem;cursor:pointer;padding:.4rem;border-radius:8px">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div>
+          <div class="page-title" id="welcomeTitle">Dashboard</div>
+          <div class="page-subtitle" id="currentDate">Loading...</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem">
+        <a href="activity.html" class="btn btn-outline btn-sm"><i class="fas fa-plus"></i> Log Activity</a>
+        <a href="profile.html" style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:.9rem;flex-shrink:0" id="headerAvatar">A</a>
+      </div>
+    </header>
+
+    <div class="dashboard-content">
+      <!-- Welcome Banner -->
+      <div class="welcome-banner" id="welcomeBanner">
+        <div class="welcome-text">
+          <h2 id="welcomeMsg">Welcome back! 💪</h2>
+          <p>You're on a <span id="streakDays">3</span>-day streak. Keep going strong!</p>
+        </div>
+        <div class="welcome-actions">
+          <a href="workout-log.html" class="btn btn-primary"><i class="fas fa-plus"></i> Log Workout</a>
+          <a href="workout-planner.html" class="btn btn-ghost"><i class="fas fa-calendar"></i> View Plan</a>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card green">
+          <div class="stat-info">
+            <div class="stat-label">Steps Today</div>
+            <div class="stat-value" id="stepsVal">—</div>
+            <div class="stat-change up"><i class="fas fa-arrow-up"></i> 12% vs yesterday</div>
+          </div>
+          <div class="stat-icon green"><i class="fas fa-shoe-prints"></i></div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-info">
+            <div class="stat-label">Calories Burned</div>
+            <div class="stat-value" id="caloriesVal">—</div>
+            <div class="stat-change up"><i class="fas fa-arrow-up"></i> 8% vs yesterday</div>
+          </div>
+          <div class="stat-icon orange"><i class="fas fa-fire-alt"></i></div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-info">
+            <div class="stat-label">Heart Rate</div>
+            <div class="stat-value" id="heartRateVal">—</div>
+            <div class="stat-change" style="color:var(--text-muted)"><i class="fas fa-minus"></i> Normal</div>
+          </div>
+          <div class="stat-icon blue"><i class="fas fa-heartbeat"></i></div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-info">
+            <div class="stat-label">Distance</div>
+            <div class="stat-value" id="distanceVal">—</div>
+            <div class="stat-change up"><i class="fas fa-arrow-up"></i> 5% vs yesterday</div>
+          </div>
+          <div class="stat-icon purple"><i class="fas fa-road"></i></div>
+        </div>
+      </div>
+
+      <!-- Main Grid -->
+      <div class="dashboard-grid">
+        <!-- Left Column -->
+        <div>
+          <!-- Weekly Calories Chart -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="widget-title"><i class="fas fa-fire-alt"></i> Calories Burned</div>
+              <div class="period-tabs">
+                <button class="period-tab active" data-period="week">Week</button>
+                <button class="period-tab" data-period="month">Month</button>
+              </div>
+            </div>
+            <div class="chart-container" style="height:220px">
+              <canvas id="caloriesChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Steps Chart -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="widget-title"><i class="fas fa-shoe-prints"></i> Steps Progress</div>
+              <div class="period-tabs">
+                <button class="period-tab active">Week</button>
+                <button class="period-tab">Month</button>
+              </div>
+            </div>
+            <div class="chart-container" style="height:200px">
+              <canvas id="stepsChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Nutrition Summary -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="widget-title"><i class="fas fa-apple-alt"></i> Today's Nutrition</div>
+              <a href="nutrition.html" class="btn btn-outline btn-sm">Log Meal</a>
+            </div>
+            <div class="macro-grid">
+              <div class="macro-item calories">
+                <div class="macro-value" id="macroCalories">0</div>
+                <div class="macro-label">Calories</div>
+              </div>
+              <div class="macro-item protein">
+                <div class="macro-value" id="macroProtein">0g</div>
+                <div class="macro-label">Protein</div>
+              </div>
+              <div class="macro-item carbs">
+                <div class="macro-value" id="macroCarbs">0g</div>
+                <div class="macro-label">Carbs</div>
+              </div>
+              <div class="macro-item fat">
+                <div class="macro-value" id="macroFat">0g</div>
+                <div class="macro-label">Fat</div>
+              </div>
+            </div>
+            <div class="water-tracker" style="margin-top:.75rem">
+              <i class="fas fa-tint" style="color:var(--blue);font-size:1.2rem"></i>
+              <div>
+                <div style="font-size:.8rem;font-weight:600;margin-bottom:.4rem;color:var(--text-secondary)">Water Intake</div>
+                <div class="water-glasses" id="waterGlasses"></div>
+              </div>
+              <div style="margin-left:auto;font-size:.85rem;font-weight:700;color:var(--blue)" id="waterCount">0/8</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div>
+          <!-- Activity Ring -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="widget-title"><i class="fas fa-circle-notch"></i> Daily Activity</div>
+            </div>
+            <div class="activity-ring-container">
+              <div class="activity-ring">
+                <svg width="100" height="100" viewBox="0 0 100 100">
+                  <circle class="ring-bg" cx="50" cy="50" r="40"/>
+                  <circle class="ring-fill" id="activityRingFill" cx="50" cy="50" r="40"
+                    stroke="url(#ringGrad)"
+                    stroke-dasharray="251.3"
+                    stroke-dashoffset="251.3"/>
+                  <defs>
+                    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#00d4aa"/>
+                      <stop offset="100%" stop-color="#5b8cff"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div class="ring-center">
+                  <span id="ringPercent">0%</span>
+                  <small>Goal</small>
+                </div>
+              </div>
+              <div class="ring-legend">
+                <div class="ring-legend-item">
+                  <div class="ring-legend-dot" style="background:#00d4aa"></div>
+                  <span>Steps</span>
+                  <strong id="legendSteps">0</strong>
+                </div>
+                <div class="ring-legend-item">
+                  <div class="ring-legend-dot" style="background:#ff6b35"></div>
+                  <span>Calories</span>
+                  <strong id="legendCalories">0</strong>
+                </div>
+                <div class="ring-legend-item">
+                  <div class="ring-legend-dot" style="background:#5b8cff"></div>
+                  <span>Distance</span>
+                  <strong id="legendDistance">0 km</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Goals -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="widget-title"><i class="fas fa-bullseye"></i> Goal Progress</div>
+              <a href="goals.html" class="btn btn-outline btn-sm">Manage</a>
+            </div>
+            <div id="goalsList">
+              <div class="empty-state" style="padding:1.5rem">
+                <i class="fas fa-bullseye"></i>
+                <p>No goals set yet.</p>
+                <a href="goals.html" class="btn btn-primary btn-sm">Set Goals</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upcoming Workouts -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="widget-title"><i class="fas fa-calendar-check"></i> Upcoming Workouts</div>
+              <a href="workout-planner.html" class="btn btn-outline btn-sm">Plan</a>
+            </div>
+            <div id="upcomingWorkouts">
+              <div class="empty-state" style="padding:1.5rem">
+                <i class="fas fa-calendar-check"></i>
+                <p>No workouts planned yet.</p>
+                <a href="workout-planner.html" class="btn btn-primary btn-sm">Plan Workout</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Workouts Widget -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <div class="widget-title"><i class="fas fa-history"></i> Recent Workouts</div>
+              <a href="workout-log.html" class="btn btn-outline btn-sm">View All</a>
+            </div>
+            <div id="recentWorkouts">
+              <div class="empty-state" style="padding:1.5rem">
+                <i class="fas fa-dumbbell"></i>
+                <p>No workouts logged yet.</p>
+                <a href="workout-log.html" class="btn btn-primary btn-sm">Log Workout</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/main.js"></script>
+  <script>
+    requireAuth();
+
+    const user = Auth.getCurrentUser();
+    const userId = user?.id;
+
+    // ── Welcome message ──
+    if (user) {
+      const isNew = !Storage.get(STORAGE_KEYS.WORKOUTS, []).some(w => w.userId === userId);
+      document.getElementById('welcomeMsg').textContent = isNew
+        ? `Welcome to FitTrack, ${user.name}! 🎉`
+        : `Welcome back, ${user.name}! 💪`;
+      document.getElementById('headerAvatar').textContent = user.avatar || user.name[0];
+      document.getElementById('streakDays').textContent = isNew ? '0' : '3';
+    }
+
+    // ── Date ──
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+      weekday:'long', year:'numeric', month:'long', day:'numeric'
+    });
+
+    // ── Derive stats from real storage ──
+    // Steps: sum from goals (daily steps goal current value) or 0
+    const allGoals   = Storage.get(STORAGE_KEYS.GOALS, []).filter(g => g.userId === userId);
+    const stepsGoal  = allGoals.find(g => g.name.toLowerCase().includes('step'));
+    const stepsVal   = stepsGoal ? stepsGoal.current : 0;
+
+    // Calories burned: from goals or 0
+    const calGoal    = allGoals.find(g => g.name.toLowerCase().includes('calorie') && g.unit === 'kcal');
+    const calBurned  = calGoal ? calGoal.current : 0;
+
+    // Distance: derived from steps (avg 0.762m per step → km)
+    const distKm     = stepsVal ? +(stepsVal * 0.000762).toFixed(1) : 0;
+
+    // Heart rate: stored in profile or default 0 for new users
+    const hrVal      = user?.heartRate || 0;
+
+    // ── Render stat cards ──
+    setTimeout(() => {
+      animateNumber(document.getElementById('stepsVal'), 0, stepsVal);
+      animateNumber(document.getElementById('caloriesVal'), 0, calBurned);
+
+      const hrEl = document.getElementById('heartRateVal');
+      hrEl.textContent = hrVal ? hrVal + ' bpm' : '— bpm';
+
+      document.getElementById('distanceVal').textContent = distKm ? distKm + ' km' : '0 km';
+
+      // Stat change labels
+      document.getElementById('legendSteps').textContent    = stepsVal.toLocaleString();
+      document.getElementById('legendCalories').textContent = calBurned;
+      document.getElementById('legendDistance').textContent = distKm + ' km';
+
+      // Hide "vs yesterday" arrows if data is zero
+      if (!stepsVal) {
+        document.querySelectorAll('.stat-change.up').forEach(el => {
+          el.innerHTML = '<i class="fas fa-minus"></i> No data yet';
+          el.classList.remove('up');
+          el.style.color = 'var(--text-muted)';
+        });
+      }
+
+      // ── Activity ring ──
+      const stepGoalTarget = stepsGoal?.target || 10000;
+      const ringPct = stepsVal ? Math.min(Math.round((stepsVal / stepGoalTarget) * 100), 100) : 0;
+      document.getElementById('ringPercent').textContent = ringPct + '%';
+      const circ   = 2 * Math.PI * 40;
+      const offset = circ - (ringPct / 100) * circ;
+      document.getElementById('activityRingFill').style.strokeDashoffset = offset;
+    }, 300);
+
+    // ── Build 7-day chart data from real workout/nutrition storage ──
+    const weekLabels = [];
+    const weekCalories = [];   // calories burned (workout duration proxy)
+    const weekSteps = [];
+
+    for (let i = 6; i >= 0; i--) {
+      const d = DateUtils.daysAgo(i);
+      weekLabels.push(DateUtils.dayOfWeek(d));
+
+      // Calories from nutrition log for that day
+      const nutrDay = Storage.get(STORAGE_KEYS.NUTRITION, [])
+        .filter(n => n.userId === userId && n.date === d);
+      const dayCals = nutrDay.reduce((s, n) => s + (n.calories || 0), 0);
+      weekCalories.push(dayCals);
+
+      // Steps: flat 0 for all historical days (no historical step data yet)
+      weekSteps.push(0);
+    }
+
+    const chartDefaults = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#64748b', font: { size: 11 } } },
+        y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#64748b', font: { size: 11 } } }
+      }
+    };
+
+    new Chart(document.getElementById('caloriesChart'), {
+      type: 'bar',
+      data: {
+        labels: weekLabels,
+        datasets: [{
+          data: weekCalories,
+          backgroundColor: weekLabels.map((_, i) => i === 6 ? 'rgba(255,107,53,0.85)' : 'rgba(255,107,53,0.25)'),
+          borderRadius: 6,
+          borderSkipped: false,
+        }]
+      },
+      options: { ...chartDefaults }
+    });
+
+    new Chart(document.getElementById('stepsChart'), {
+      type: 'line',
+      data: {
+        labels: weekLabels,
+        datasets: [{
+          data: weekSteps,
+          borderColor: '#00d4aa',
+          backgroundColor: 'rgba(0,212,170,0.1)',
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#00d4aa',
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        }]
+      },
+      options: { ...chartDefaults, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, suggestedMin: 0, beginAtZero: true } } }
+    });
+
+    // ── Nutrition (today's totals) ──
+    const allNutrition = Storage.get(STORAGE_KEYS.NUTRITION, [])
+      .filter(n => n.userId === userId && n.date === DateUtils.today() && !n._waterOnly);
+    const todayTotals = allNutrition.reduce(
+      (a, n) => ({ calories: a.calories + (n.calories||0), protein: a.protein + (n.protein||0), carbs: a.carbs + (n.carbs||0), fat: a.fat + (n.fat||0) }),
+      { calories: 0, protein: 0, carbs: 0, fat: 0 }
+    );
+    document.getElementById('macroCalories').textContent = todayTotals.calories;
+    document.getElementById('macroProtein').textContent  = todayTotals.protein + 'g';
+    document.getElementById('macroCarbs').textContent    = todayTotals.carbs + 'g';
+    document.getElementById('macroFat').textContent      = todayTotals.fat + 'g';
+
+    // Water
+    const waterEntry = Storage.get(STORAGE_KEYS.NUTRITION, [])
+      .find(n => n.userId === userId && n.date === DateUtils.today() && n._waterOnly);
+    const wc = waterEntry?.water || 0;
+    document.getElementById('waterCount').textContent = wc + '/8';
+    let glasses = '';
+    for (let i = 0; i < 8; i++) glasses += `<i class="fas fa-glass-water glass-icon ${i < wc ? 'filled' : ''}"></i>`;
+    document.getElementById('waterGlasses').innerHTML = glasses;
+
+    // ── Goals ──
+    if (allGoals.length) {
+      document.getElementById('goalsList').innerHTML = allGoals.slice(0, 4).map(g => {
+        const pct = Math.min(Math.round((g.current / g.target) * 100), 100);
+        return `<div class="goal-item">
+          <div class="goal-header">
+            <div class="goal-name" style="color:${g.color}">${g.name}</div>
+            <div class="goal-progress-text">${g.current}/${g.target} ${g.unit}</div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" data-width="${pct}%" style="background:${g.color};width:0"></div>
+          </div>
+        </div>`;
+      }).join('');
+      animateProgressBars();
+    }
+    // (else: empty state HTML already in markup)
+
+    // ── Upcoming planned workouts ──
+    const today = DateUtils.today();
+    const plannedAll = Storage.get(STORAGE_KEYS.PLANNER, []).filter(p => p.userId === userId);
+    const upcoming = plannedAll.filter(p => p.date >= today).sort((a,b) => a.date.localeCompare(b.date)).slice(0, 3);
+    const PLAN_COLORS = { Strength:'var(--secondary)', Cardio:'var(--blue)', HIIT:'var(--red)', Flexibility:'var(--purple)', Rest:'var(--text-muted)' };
+    if (upcoming.length) {
+      document.getElementById('upcomingWorkouts').innerHTML = upcoming.map(p => `
+        <div class="workout-item">
+          <div class="workout-icon" style="background:rgba(0,212,170,.1);color:${PLAN_COLORS[p.type]||'var(--primary)'}">
+            <i class="fas fa-dumbbell"></i>
+          </div>
+          <div class="workout-info">
+            <strong>${p.name}</strong>
+            <span>${DateUtils.format(p.date)} ${p.time ? '· ' + p.time : ''} ${p.duration ? '· ' + p.duration + ' min' : ''}</span>
+          </div>
+          <div class="workout-time">${DateUtils.dayOfWeek(p.date)}<br/>${new Date(p.date+'T00:00:00').getDate()}</div>
+        </div>
+      `).join('');
+    } else {
+      document.getElementById('upcomingWorkouts').innerHTML = `
+        <div class="empty-state" style="padding:1.5rem">
+          <i class="fas fa-calendar-check"></i>
+          <p>No workouts planned.</p>
+          <a href="workout-planner.html" class="btn btn-primary btn-sm">Plan Workout</a>
+        </div>`;
+    }
+
+    // ── Recent workouts ──
+    const allWorkouts = Storage.get(STORAGE_KEYS.WORKOUTS, []).filter(w => w.userId === userId);
+    if (allWorkouts.length) {
+      const sorted = [...allWorkouts].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, 3);
+      document.getElementById('recentWorkouts').innerHTML = sorted.map(w => `
+        <div class="workout-item">
+          <div class="workout-icon"><i class="fas fa-dumbbell"></i></div>
+          <div class="workout-info">
+            <strong>${w.exercise}</strong>
+            <span>${w.sets} sets × ${w.reps} reps • ${w.duration} min</span>
+          </div>
+          <div class="workout-time">${DateUtils.dayOfWeek(w.date)}<br/>${new Date(w.date+'T00:00:00').getDate()}</div>
+        </div>
+      `).join('');
+    }
+    // (else: empty state HTML already in markup)
+  </script>
+</body>
+</html>

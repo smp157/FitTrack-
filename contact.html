@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us – FitTrack</title>
+  <meta name="description" content="Get in touch with the FitTrack team. We're here to help with any questions about our fitness platform." />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="inner-page">
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo"><i class="fas fa-bolt"></i><span>FitTrack</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="exercise-library.html">Exercises</a></li>
+        <li><a href="membership.html">Membership</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-outline" id="loginBtn">Login</a>
+        <a href="signup.html" class="btn btn-primary">Get Started</a>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-tag">Contact</span>
+      <h1>We'd Love to <span class="gradient-text">Hear From You</span></h1>
+      <p>Have a question, feedback, or need support? Our friendly team is always ready to help you on your fitness journey.</p>
+    </div>
+  </section>
+
+  <section class="contact-section">
+    <div class="container">
+      <div class="contact-grid">
+        <!-- Form -->
+        <div class="card" style="padding:2rem">
+          <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:.5rem">Send us a Message</h2>
+          <p style="color:var(--text-secondary);font-size:.9rem;margin-bottom:1.75rem">Fill out the form below and we'll get back to you within 24 hours.</p>
+
+          <div id="contactSuccess" style="display:none;padding:1.25rem;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.3);border-radius:12px;margin-bottom:1.5rem;text-align:center">
+            <i class="fas fa-check-circle" style="font-size:2rem;color:var(--primary);display:block;margin-bottom:.5rem"></i>
+            <h4 style="font-weight:700;margin-bottom:.25rem">Message Sent!</h4>
+            <p style="font-size:.875rem;color:var(--text-secondary)">Thank you! We'll get back to you within 24 hours.</p>
+          </div>
+
+          <form id="contactForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contactName">Full Name *</label>
+                <input type="text" id="contactName" class="form-control" placeholder="Your name" /><span class="form-error"></span>
+              </div>
+              <div class="form-group">
+                <label for="contactEmail">Email Address *</label>
+                <input type="email" id="contactEmail" class="form-control" placeholder="you@example.com" /><span class="form-error"></span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="contactSubject">Subject *</label>
+              <select id="contactSubject" class="form-control">
+                <option value="">Select a topic...</option>
+                <option value="General Inquiry">General Inquiry</option>
+                <option value="Technical Support">Technical Support</option>
+                <option value="Billing Question">Billing Question</option>
+                <option value="Feature Request">Feature Request</option>
+                <option value="Partnership">Partnership</option>
+                <option value="Other">Other</option>
+              </select>
+              <span class="form-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="contactMessage">Message *</label>
+              <textarea id="contactMessage" class="form-control" rows="5" placeholder="How can we help you?"></textarea>
+              <span class="form-error"></span>
+            </div>
+            <button type="submit" class="btn btn-primary btn-large" style="width:100%;justify-content:center" id="contactSubmitBtn">
+              <i class="fas fa-paper-plane"></i> Send Message
+            </button>
+          </form>
+        </div>
+
+        <!-- Contact Info -->
+        <div>
+          <div class="contact-info">
+            <div class="contact-item">
+              <div class="contact-item-icon green"><i class="fas fa-map-marker-alt"></i></div>
+              <div>
+                <h4>Our Office</h4>
+                <p>123 Fitness Avenue, Suite 100<br />San Francisco, CA 94102<br />United States</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-item-icon blue"><i class="fas fa-envelope"></i></div>
+              <div>
+                <h4>Email Us</h4>
+                <p>support@fittrack.com<br />partnerships@fittrack.com</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-item-icon orange"><i class="fas fa-phone-alt"></i></div>
+              <div>
+                <h4>Call Us</h4>
+                <p>+1 (800) 348-8725<br />Mon–Fri, 9am–6pm PST</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Social -->
+          <div class="card" style="margin-top:1.5rem;padding:1.5rem">
+            <h4 style="font-weight:700;margin-bottom:1rem">Follow Us</h4>
+            <div style="display:flex;gap:.75rem">
+              <a href="#" class="social-links" onclick="Toast.info('Follow us on Twitter!');return false" style="text-decoration:none">
+                <span style="width:44px;height:44px;border-radius:10px;background:var(--bg-card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:all .3s;font-size:1.1rem" class="soc-btn"><i class="fab fa-twitter"></i></span>
+              </a>
+              <a href="#" onclick="Toast.info('Follow us on Instagram!');return false" style="text-decoration:none">
+                <span style="width:44px;height:44px;border-radius:10px;background:var(--bg-card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:all .3s;font-size:1.1rem"><i class="fab fa-instagram"></i></span>
+              </a>
+              <a href="#" onclick="Toast.info('Join us on Facebook!');return false" style="text-decoration:none">
+                <span style="width:44px;height:44px;border-radius:10px;background:var(--bg-card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:all .3s;font-size:1.1rem"><i class="fab fa-facebook"></i></span>
+              </a>
+              <a href="#" onclick="Toast.info('Subscribe on YouTube!');return false" style="text-decoration:none">
+                <span style="width:44px;height:44px;border-radius:10px;background:var(--bg-card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:all .3s;font-size:1.1rem"><i class="fab fa-youtube"></i></span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Hours -->
+          <div class="card" style="margin-top:1rem;padding:1.5rem">
+            <h4 style="font-weight:700;margin-bottom:1rem"><i class="fas fa-clock" style="color:var(--primary)"></i> Support Hours</h4>
+            <div style="display:flex;flex-direction:column;gap:.5rem;font-size:.875rem">
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Monday – Friday</span><strong>9:00 AM – 6:00 PM PST</strong></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Saturday</span><strong>10:00 AM – 4:00 PM PST</strong></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Sunday</span><strong style="color:var(--red)">Closed</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none;padding-top:0"><p>&copy; 2026 FitTrack. All rights reserved.</p></div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    document.getElementById('contactForm').addEventListener('submit',function(e){
+      e.preventDefault();
+      const valid = Validator.validateForm(this, {
+        contactName:[Validator.rules.required],
+        contactEmail:[Validator.rules.required,Validator.rules.email],
+        contactSubject:[Validator.rules.required],
+        contactMessage:[Validator.rules.required,Validator.rules.minLength(10)],
+      });
+      if (!valid) return;
+
+      const btn = document.getElementById('contactSubmitBtn');
+      btn.innerHTML='<span class="spinner"></span> Sending...'; btn.disabled=true;
+
+      const msg = {
+        id:Date.now(), name:document.getElementById('contactName').value,
+        email:document.getElementById('contactEmail').value,
+        subject:document.getElementById('contactSubject').value,
+        message:document.getElementById('contactMessage').value,
+        sentAt:new Date().toISOString()
+      };
+      const all = Storage.get(STORAGE_KEYS.CONTACTS,[]);
+      all.push(msg); Storage.set(STORAGE_KEYS.CONTACTS,all);
+
+      setTimeout(()=>{
+        document.getElementById('contactSuccess').style.display='block';
+        this.style.display='none';
+        btn.innerHTML='<i class="fas fa-paper-plane"></i> Send Message'; btn.disabled=false;
+        Toast.success('Message sent successfully!');
+      },800);
+    });
+  </script>
+</body>
+</html>

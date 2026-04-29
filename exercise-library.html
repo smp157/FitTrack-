@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exercise Library – FitTrack</title>
+  <meta name="description" content="Browse hundreds of exercises across cardio, strength, flexibility, and more with beginner to advanced filters." />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="inner-page">
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo"><i class="fas fa-bolt"></i><span>FitTrack</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="exercise-library.html" class="active">Exercises</a></li>
+        <li><a href="membership.html">Membership</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-outline" id="loginBtn">Login</a>
+        <a href="signup.html" class="btn btn-primary">Get Started</a>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-tag">Exercise Library</span>
+      <h1>Find Your <span class="gradient-text">Perfect Exercise</span></h1>
+      <p>Browse 100+ exercises categorized by muscle group, difficulty, and fitness goal. From beginner to elite level.</p>
+    </div>
+  </section>
+
+  <section class="exercise-section">
+    <div class="container">
+      <!-- Filters -->
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center">
+        <div class="search-bar" style="max-width:300px">
+          <i class="fas fa-search"></i>
+          <input type="text" id="exerciseSearch" class="search-input" placeholder="Search exercises..." />
+        </div>
+        <div class="exercise-filters">
+          <button class="filter-btn active" data-cat="all">All</button>
+          <button class="filter-btn" data-cat="Strength">Strength</button>
+          <button class="filter-btn" data-cat="Cardio">Cardio</button>
+          <button class="filter-btn" data-cat="Flexibility">Flexibility</button>
+          <button class="filter-btn" data-cat="HIIT">HIIT</button>
+          <button class="filter-btn" data-cat="Core">Core</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:2rem">
+        <button class="filter-btn active" data-level="all" id="levelAll">All Levels</button>
+        <button class="filter-btn" data-level="Beginner">Beginner</button>
+        <button class="filter-btn" data-level="Intermediate">Intermediate</button>
+        <button class="filter-btn" data-level="Advanced">Advanced</button>
+      </div>
+
+      <div class="exercise-grid" id="exerciseGrid"></div>
+    </div>
+  </section>
+
+  <!-- Exercise Detail Modal -->
+  <div class="modal-overlay" id="exerciseModal">
+    <div class="modal" style="max-width:600px">
+      <div class="modal-header">
+        <h3 id="modalExName">Exercise Name</h3>
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+      </div>
+      <div id="modalExContent"></div>
+    </div>
+  </div>
+
+  <footer class="footer" style="margin-top:0">
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none;padding-top:0">
+        <p>&copy; 2026 FitTrack. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    const EXERCISES = [
+      { id:1, name:'Bench Press', category:'Strength', level:'Intermediate', muscle:'Chest', emoji:'🏋️', sets:'3-4', reps:'8-12', desc:'Classic compound movement for chest, triceps, and anterior deltoid development.', tips:'Keep shoulder blades retracted and feet flat on floor.' },
+      { id:2, name:'Squats', category:'Strength', level:'Beginner', muscle:'Legs', emoji:'🦵', sets:'4', reps:'8-10', desc:'The king of lower body exercises targeting quads, hamstrings, and glutes.', tips:'Keep chest up and knees tracking over toes.' },
+      { id:3, name:'Deadlift', category:'Strength', level:'Intermediate', muscle:'Back', emoji:'🏋️', sets:'3-4', reps:'5-8', desc:'Full-body powerhouse movement targeting posterior chain.', tips:'Neutral spine throughout the lift. Drive through heels.' },
+      { id:4, name:'Pull-ups', category:'Strength', level:'Intermediate', muscle:'Back', emoji:'💪', sets:'3', reps:'6-10', desc:'Upper body staple for back width, biceps, and core stability.', tips:'Start from dead hang, pull chest to bar.' },
+      { id:5, name:'Running', category:'Cardio', level:'Beginner', muscle:'Full Body', emoji:'🏃', sets:'—', reps:'20-60 min', desc:'One of the most accessible cardio exercises for cardiovascular health and calorie burn.', tips:'Start slow, gradually increase pace and distance.' },
+      { id:6, name:'Plank', category:'Core', level:'Beginner', muscle:'Core', emoji:'🧘', sets:'3', reps:'30-60s', desc:'Fundamental isometric core exercise improving stability and endurance.', tips:'Keep body in straight line, engage core throughout.' },
+      { id:7, name:'HIIT Circuit', category:'HIIT', level:'Advanced', muscle:'Full Body', emoji:'⚡', sets:'5', reps:'45s on/15s off', desc:'High-intensity intervals maximize calorie burn and improve cardiovascular fitness rapidly.', tips:'Push hard during work periods, fully rest during breaks.' },
+      { id:8, name:'Yoga Sun Salutation', category:'Flexibility', level:'Beginner', muscle:'Full Body', emoji:'🧘', sets:'5', reps:'Flow', desc:'Dynamic yoga sequence improving flexibility, balance, and mindfulness.', tips:'Match breath to movement. Never force a stretch.' },
+      { id:9, name:'Shoulder Press', category:'Strength', level:'Intermediate', muscle:'Shoulders', emoji:'💪', sets:'3-4', reps:'8-12', desc:'Overhead pressing movement for shoulder development and upper body strength.', tips:'Avoid excessive arching, keep core tight.' },
+      { id:10, name:'Cycling', category:'Cardio', level:'Beginner', muscle:'Legs', emoji:'🚴', sets:'—', reps:'30-60 min', desc:'Low-impact cardiovascular exercise great for endurance and leg strength.', tips:'Adjust seat height to prevent knee strain.' },
+      { id:11, name:'Push-ups', category:'Strength', level:'Beginner', muscle:'Chest', emoji:'🏋️', sets:'3', reps:'10-20', desc:'Bodyweight classic for chest, triceps, and core strength. Can be done anywhere.', tips:'Keep body straight, lower chest to near floor.' },
+      { id:12, name:'Burpees', category:'HIIT', level:'Advanced', muscle:'Full Body', emoji:'⚡', sets:'3-5', reps:'10-15', desc:'Full-body explosive movement combining squat, plank, jump for maximum intensity.', tips:'Land softly, maintain form when fatigued.' },
+      { id:13, name:'Lunges', category:'Strength', level:'Beginner', muscle:'Legs', emoji:'🦵', sets:'3', reps:'12 each leg', desc:'Unilateral lower body exercise improving balance, coordination, and leg strength.', tips:'Step far enough that knee does not go past toes.' },
+      { id:14, name:'Tricep Dips', category:'Strength', level:'Intermediate', muscle:'Arms', emoji:'💪', sets:'3', reps:'10-15', desc:'Compound movement targeting triceps, chest, and shoulders.', tips:'Keep elbows pointing back, not flaring outward.' },
+      { id:15, name:'Bicep Curls', category:'Strength', level:'Beginner', muscle:'Arms', emoji:'💪', sets:'3-4', reps:'10-15', desc:'Isolation exercise for bicep development and arm aesthetics.', tips:'Control the eccentric phase, avoid swinging body.' },
+      { id:16, name:'Jump Rope', category:'Cardio', level:'Intermediate', muscle:'Full Body', emoji:'🏃', sets:'—', reps:'10 min', desc:'High-efficiency cardio that improves coordination, agility, and burns calories fast.', tips:'Stay on balls of feet, rotate wrists not arms.' },
+      { id:17, name:'Russian Twists', category:'Core', level:'Intermediate', muscle:'Core', emoji:'🧘', sets:'3', reps:'20', desc:'Rotational core exercise targeting obliques and improving rotational strength.', tips:'Keep spine neutral, control the rotation.' },
+      { id:18, name:'Downward Dog', category:'Flexibility', level:'Beginner', muscle:'Full Body', emoji:'🧘', sets:'3', reps:'30-60s hold', desc:'Foundational yoga pose stretching hamstrings, calves, shoulders, and spine.', tips:'Push heels toward floor, keep arms and legs straight.' },
+      { id:19, name:'Mountain Climbers', category:'HIIT', level:'Intermediate', muscle:'Core', emoji:'⚡', sets:'3', reps:'30s', desc:'Dynamic core exercise combining cardio and core strength in one movement.', tips:'Keep hips level, drive knees toward chest alternately.' },
+      { id:20, name:'Deadbug', category:'Core', level:'Beginner', muscle:'Core', emoji:'🧘', sets:'3', reps:'10 each side', desc:'Anti-extension core exercise that improves stability and coordination.', tips:'Press lower back into floor throughout movement.' },
+      { id:21, name:'Box Jumps', category:'HIIT', level:'Advanced', muscle:'Legs', emoji:'⚡', sets:'4', reps:'8-10', desc:'Plyometric exercise for explosive power, athleticism, and fat burning.', tips:'Land softly with bent knees, step down from box.' },
+      { id:22, name:'Hip Flexor Stretch', category:'Flexibility', level:'Beginner', muscle:'Hips', emoji:'🧘', sets:'2-3', reps:'30s each side', desc:'Essential stretch for people who sit for long periods, relieving hip tightness.', tips:'Keep torso upright, feel the stretch in front hip.' },
+      { id:23, name:'Barbell Row', category:'Strength', level:'Intermediate', muscle:'Back', emoji:'🏋️', sets:'4', reps:'8-12', desc:'Compound pulling movement for back thickness, biceps, and posture improvement.', tips:'Hinge at hips, pull bar to lower chest/upper abs.' },
+      { id:24, name:'Swimming', category:'Cardio', level:'Beginner', muscle:'Full Body', emoji:'🏊', sets:'—', reps:'30-60 min', desc:'Full-body, low-impact cardio exercise excellent for cardiovascular health.', tips:'Focus on breathing rhythm and proper technique.' },
+    ];
+
+    let activeCategory = 'all';
+    let activeLevel = 'all';
+    let searchQuery = '';
+
+    function renderExercises() {
+      const filtered = EXERCISES.filter(e => {
+        const catMatch = activeCategory === 'all' || e.category === activeCategory;
+        const lvlMatch = activeLevel === 'all' || e.level === activeLevel;
+        const searchMatch = !searchQuery || e.name.toLowerCase().includes(searchQuery) || e.muscle.toLowerCase().includes(searchQuery);
+        return catMatch && lvlMatch && searchMatch;
+      });
+
+      const levelColors = { Beginner:'#00d4aa', Intermediate:'#f59e0b', Advanced:'#ef4444' };
+      const catColors = { Strength:'#5b8cff', Cardio:'#ff6b35', Flexibility:'#8b5cf6', HIIT:'#ef4444', Core:'#14b8a6' };
+
+      const grid = document.getElementById('exerciseGrid');
+      grid.innerHTML = filtered.length ? filtered.map(e => `
+        <div class="exercise-card" onclick="showExercise(${e.id})">
+          <div class="exercise-img" style="background:linear-gradient(135deg,${catColors[e.category]||'#00d4aa'}22,var(--bg-dark))">
+            <div style="font-size:3.5rem">${e.emoji}</div>
+            <div class="exercise-difficulty">
+              <span class="badge" style="background:${levelColors[e.level]}22;color:${levelColors[e.level]}">${e.level}</span>
+            </div>
+          </div>
+          <div class="exercise-body">
+            <h4>${e.name}</h4>
+            <div class="exercise-meta"><i class="fas fa-crosshairs" style="color:var(--text-muted)"></i> ${e.muscle}</div>
+            <div class="exercise-tags">
+              <span class="exercise-tag" style="color:${catColors[e.category]};background:${catColors[e.category]}15">${e.category}</span>
+              <span class="exercise-tag">${e.sets} sets</span>
+              <span class="exercise-tag">${e.reps} reps</span>
+            </div>
+          </div>
+        </div>
+      `).join('') : '<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-search"></i><h3>No exercises found</h3><p>Try different filters or search terms.</p></div>';
+    }
+
+    window.showExercise = function(id) {
+      const e = EXERCISES.find(x=>x.id===id);
+      if (!e) return;
+      document.getElementById('modalExName').textContent = e.name;
+      document.getElementById('modalExContent').innerHTML = `
+        <div style="text-align:center;padding:1.5rem;background:var(--bg-card2);border-radius:12px;margin-bottom:1.5rem;font-size:4rem">${e.emoji}</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.5rem">
+          <div style="text-align:center;padding:.75rem;background:var(--bg-card2);border-radius:10px"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:.25rem">CATEGORY</div><div style="font-weight:700;color:var(--primary)">${e.category}</div></div>
+          <div style="text-align:center;padding:.75rem;background:var(--bg-card2);border-radius:10px"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:.25rem">LEVEL</div><div style="font-weight:700;color:var(--secondary)">${e.level}</div></div>
+          <div style="text-align:center;padding:.75rem;background:var(--bg-card2);border-radius:10px"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:.25rem">MUSCLE</div><div style="font-weight:700;color:var(--blue)">${e.muscle}</div></div>
+        </div>
+        <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:1rem">${e.desc}</p>
+        <div style="background:rgba(0,212,170,.06);border:1px solid rgba(0,212,170,.2);border-radius:10px;padding:1rem;margin-bottom:1.25rem">
+          <div style="font-size:.8rem;font-weight:700;color:var(--primary);margin-bottom:.4rem"><i class="fas fa-lightbulb"></i> Pro Tip</div>
+          <div style="font-size:.875rem;color:var(--text-secondary)">${e.tips}</div>
+        </div>
+        <div style="display:flex;gap:.75rem">
+          <a href="workout-log.html" class="btn btn-primary" style="flex:1;justify-content:center"><i class="fas fa-plus"></i> Log This Exercise</a>
+          <button class="btn btn-ghost" onclick="Modal.hide('exerciseModal')">Close</button>
+        </div>
+      `;
+      Modal.show('exerciseModal');
+    };
+
+    // Category filter
+    document.querySelectorAll('[data-cat]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('[data-cat]').forEach(b=>b.classList.remove('active'));
+        this.classList.add('active');
+        activeCategory = this.dataset.cat;
+        renderExercises();
+      });
+    });
+
+    // Level filter
+    document.querySelectorAll('[data-level]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('[data-level]').forEach(b=>b.classList.remove('active'));
+        this.classList.add('active');
+        activeLevel = this.dataset.level;
+        renderExercises();
+      });
+    });
+
+    // Search
+    document.getElementById('exerciseSearch').addEventListener('input', function() {
+      searchQuery = this.value.toLowerCase();
+      renderExercises();
+    });
+
+    renderExercises();
+  </script>
+</body>
+</html>
