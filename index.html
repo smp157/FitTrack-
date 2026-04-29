@@ -6,36 +6,43 @@
   <title>FitTrack – Your Ultimate Fitness Dashboard</title>
   <meta name="description" content="FitTrack is your all-in-one fitness dashboard to track workouts, nutrition, goals, and progress. Start your fitness journey today." />
 
-  <!-- ✅ FIXED PATHS -->
-  <link rel="stylesheet" href="/main.css">
-<link rel="stylesheet" href="/home.css">
-<link rel="stylesheet" href="/fixes.css">
+  <!-- ✅ FIXED CSS PATHS -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="/css/fixes.css">
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
+
 <body class="home-page">
+
   <!-- Navbar -->
   <nav class="navbar" id="navbar">
     <div class="nav-container">
-      <a href="index.html" class="nav-logo">
+
+      <a href="/" class="nav-logo">
         <i class="fas fa-bolt"></i>
         <span>FitTrack</span>
       </a>
-     <ul class="nav-links" id="navLinks">
-  <li><a href="/index.html" class="active">Home</a></li>
-  <li><a href="/blog.html">Blog</a></li>
-  <li><a href="/exercise-library.html">Exercises</a></li>
-  <li><a href="/membership.html">Membership</a></li>
-  <li><a href="/contact.html">Contact</a></li>
-</ul>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="/" class="active">Home</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/exercise-library">Exercises</a></li>
+        <li><a href="/membership">Membership</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+
       <div class="nav-actions">
-        <a href="/login.html" class="btn btn-outline" id="loginBtn">Login</a>
-        <a href="/signup.html" class="btn btn-primary">Get Started</a>
+        <a href="/login" class="btn btn-outline" id="loginBtn">Login</a>
+        <a href="/signup" class="btn btn-primary">Get Started</a>
+
         <button class="hamburger" id="hamburger" aria-label="Toggle menu">
           <span></span><span></span><span></span>
         </button>
       </div>
+
     </div>
   </nav>
 
@@ -46,95 +53,32 @@
       <div class="hero-blob blob2"></div>
       <div class="hero-blob blob3"></div>
     </div>
+
     <div class="hero-content">
       <div class="hero-badge">
         <i class="fas fa-fire"></i>
         <span>#1 Fitness Tracking Platform</span>
       </div>
+
       <h1 class="hero-title">
         Transform Your Body,<br />
         <span class="gradient-text">Track Every Rep</span>
       </h1>
+
       <p class="hero-subtitle">
         The all-in-one fitness dashboard to log workouts, track nutrition, monitor progress, and crush your goals — all in one beautiful interface.
       </p>
+
       <div class="hero-cta">
-        <a href="/signup.html" class="btn btn-primary btn-large">
+        <a href="/signup" class="btn btn-primary btn-large">
           <i class="fas fa-rocket"></i>
           Start Free Today
         </a>
+
         <a href="#features" class="btn btn-ghost btn-large">
           <i class="fas fa-play-circle"></i>
           See How It Works
         </a>
-      </div>
-      <div class="hero-stats">
-        <div class="stat-item">
-          <strong>50K+</strong>
-          <span>Active Users</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item">
-          <strong>1.2M+</strong>
-          <span>Workouts Logged</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item">
-          <strong>98%</strong>
-          <span>Goal Achievement</span>
-        </div>
-      </div>
-    </div>
-    <div class="hero-visual">
-      <div class="dashboard-preview">
-        <div class="preview-header">
-          <div class="preview-dots">
-            <span></span><span></span><span></span>
-          </div>
-          <span class="preview-title">FitTrack Dashboard</span>
-        </div>
-        <div class="preview-cards">
-          <div class="preview-card green">
-            <i class="fas fa-shoe-prints"></i>
-            <div>
-              <strong>8,432</strong>
-              <small>Steps Today</small>
-            </div>
-          </div>
-          <div class="preview-card orange">
-            <i class="fas fa-fire-alt"></i>
-            <div>
-              <strong>642</strong>
-              <small>Calories Burned</small>
-            </div>
-          </div>
-          <div class="preview-card blue">
-            <i class="fas fa-heartbeat"></i>
-            <div>
-              <strong>72 bpm</strong>
-              <small>Heart Rate</small>
-            </div>
-          </div>
-          <div class="preview-card purple">
-            <i class="fas fa-road"></i>
-            <div>
-              <strong>5.2 km</strong>
-              <small>Distance</small>
-            </div>
-          </div>
-        </div>
-        <div class="preview-chart">
-          <div class="chart-label">Weekly Progress</div>
-          <div class="chart-bars">
-            <div class="bar" style="--h:60%"><span>Mon</span></div>
-            <div class="bar" style="--h:80%"><span>Tue</span></div>
-            <div class="bar" style="--h:45%"><span>Wed</span></div>
-            <div class="bar" style="--h:90%"><span>Thu</span></div>
-            <div class="bar" style="--h:70%"><span>Fri</span></div>
-            <div class="bar active" style="--h:85%"><span>Sat</span></div>
-            <div class="bar" style="--h:30%"><span>Sun</span></div>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -142,227 +86,74 @@
   <!-- Features Section -->
   <section class="features" id="features">
     <div class="container">
+
       <div class="section-header">
-        <span class="section-tag">Features</span>
         <h2>Everything You Need to <span class="gradient-text">Succeed</span></h2>
-        <p>Powerful tools designed to help you achieve your fitness goals faster</p>
       </div>
+
       <div class="features-grid">
+
         <div class="feature-card">
-          <div class="feature-icon green">
-            <i class="fas fa-chart-line"></i>
-          </div>
           <h3>Activity Tracking</h3>
-          <p>Monitor steps, calories, distance, and heart rate with real-time visual dashboards and progress charts.</p>
-          <a href="pages/activity.html" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
+          <a href="/activity" class="feature-link">Learn more</a>
         </div>
+
         <div class="feature-card">
-          <div class="feature-icon orange">
-            <i class="fas fa-dumbbell"></i>
-          </div>
           <h3>Workout Logging</h3>
-          <p>Log every set, rep, and weight. Plan your workout schedule and never miss a session again.</p>
-          <a href="pages/workout-log.html" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
+          <a href="/workout-log" class="feature-link">Learn more</a>
         </div>
+
         <div class="feature-card">
-          <div class="feature-icon blue">
-            <i class="fas fa-apple-alt"></i>
-          </div>
           <h3>Nutrition Tracking</h3>
-          <p>Track macros, calories, protein, carbs, fats, and water intake to fuel your performance.</p>
-          <a href="pages/nutrition.html" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
+          <a href="/nutrition" class="feature-link">Learn more</a>
         </div>
+
         <div class="feature-card">
-          <div class="feature-icon purple">
-            <i class="fas fa-bullseye"></i>
-          </div>
-          <h3>Goal Setting</h3>
-          <p>Set daily, weekly, and monthly goals. Visualize completion percentages and celebrate milestones.</p>
-          <a href="pages/goals.html" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
+          <h3>Goals</h3>
+          <a href="/goals" class="feature-link">Learn more</a>
         </div>
+
         <div class="feature-card">
-          <div class="feature-icon teal">
-            <i class="fas fa-book-open"></i>
-          </div>
           <h3>Exercise Library</h3>
-          <p>Browse hundreds of exercises across cardio, strength, flexibility, and more with beginner to advanced filters.</p>
-          <a href="pages/exercise-library.html" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
+          <a href="/exercise-library" class="feature-link">Learn more</a>
         </div>
+
         <div class="feature-card">
-          <div class="feature-icon red">
-            <i class="fas fa-calendar-check"></i>
-          </div>
           <h3>Workout Planner</h3>
-          <p>Plan your entire week with our drag-and-drop workout scheduler. Stay consistent and on track.</p>
-          <a href="pages/workout-planner.html" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
+          <a href="/workout-planner" class="feature-link">Learn more</a>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- How It Works -->
-  <section class="how-it-works">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">How It Works</span>
-        <h2>Simple Steps to Your <span class="gradient-text">Best Self</span></h2>
-      </div>
-      <div class="steps-grid">
-        <div class="step-card">
-          <div class="step-number">01</div>
-          <h3>Create Your Profile</h3>
-          <p>Sign up and set your fitness goals, activity level, and personal metrics.</p>
-        </div>
-        <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
-        <div class="step-card">
-          <div class="step-number">02</div>
-          <h3>Log Your Activities</h3>
-          <p>Track workouts, meals, and daily activities with our easy-to-use interface.</p>
-        </div>
-        <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
-        <div class="step-card">
-          <div class="step-number">03</div>
-          <h3>Monitor Progress</h3>
-          <p>View beautiful charts and analytics showing your improvement over time.</p>
-        </div>
-        <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
-        <div class="step-card">
-          <div class="step-number">04</div>
-          <h3>Crush Your Goals</h3>
-          <p>Stay motivated, hit your targets, and transform your body.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Testimonials Section -->
-  <section class="testimonials-preview">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Success Stories</span>
-        <h2>Real People, <span class="gradient-text">Real Results</span></h2>
-      </div>
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
-          <div class="stars">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          </div>
-          <p>"FitTrack completely transformed my fitness journey. Lost 15kg in 4 months tracking everything here!"</p>
-          <div class="testimonial-author">
-            <div class="author-avatar" style="background: linear-gradient(135deg, #00d4aa, #00a88a)">S</div>
-            <div>
-              <strong>Sarah Mitchell</strong>
-              <small>Lost 15kg in 4 months</small>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card featured">
-          <div class="stars">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          </div>
-          <p>"The nutrition tracking feature alone is worth it. Finally understanding my macros changed everything for my muscle gain goals."</p>
-          <div class="testimonial-author">
-            <div class="author-avatar" style="background: linear-gradient(135deg, #ff6b35, #ff4500)">M</div>
-            <div>
-              <strong>Marcus Johnson</strong>
-              <small>Gained 8kg muscle in 6 months</small>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="stars">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          </div>
-          <p>"The workout planner keeps me so organized. I've never been this consistent with my training schedule!"</p>
-          <div class="testimonial-author">
-            <div class="author-avatar" style="background: linear-gradient(135deg, #5b8cff, #3d6bff)">A</div>
-            <div>
-              <strong>Aisha Patel</strong>
-              <small>Marathon runner & mom of 2</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="section-cta">
-        <a href="/testimonials.html" class="btn btn-outline">View All Stories</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Membership CTA -->
+  <!-- CTA -->
   <section class="membership-cta">
     <div class="container">
+
       <div class="cta-card">
-        <div class="cta-content">
-          <h2>Ready to Start Your <span class="gradient-text">Fitness Journey?</span></h2>
-          <p>Join thousands of members who are already transforming their lives with FitTrack.</p>
-          <div class="cta-buttons">
-            <a href="/signup.html" class="btn btn-primary btn-large">Start Free Trial</a>
-            <a href="/membership.html" class="btn btn-outline-white btn-large">View Plans</a>
-          </div>
+        <h2>Ready to Start Your Fitness Journey?</h2>
+
+        <div class="cta-buttons">
+          <a href="/signup" class="btn btn-primary btn-large">Start Free Trial</a>
+          <a href="/membership" class="btn btn-outline-white btn-large">View Plans</a>
         </div>
-        <div class="cta-features">
-          <div class="cta-feature"><i class="fas fa-check"></i> No credit card required</div>
-          <div class="cta-feature"><i class="fas fa-check"></i> 14-day free trial</div>
-          <div class="cta-feature"><i class="fas fa-check"></i> Cancel anytime</div>
-          <div class="cta-feature"><i class="fas fa-check"></i> All features included</div>
-        </div>
+
       </div>
+
     </div>
   </section>
 
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <a href="index.html" class="nav-logo">
-            <i class="fas fa-bolt"></i>
-            <span>FitTrack</span>
-          </a>
-          <p>Your all-in-one fitness dashboard for tracking, planning, and crushing your goals.</p>
-          <div class="social-links">
-            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-          </div>
-        </div>
-        <div class="footer-links">
-          <h4>Platform</h4>
-          <ul>
-            <li><a href="/dashboard.html">Dashboard</a></li>
-            <li><a href="/activity.html">Activity Tracking</a></li>
-            <li><a href="/workout-log.html">Workout Log</a></li>
-            <li><a href="/nutrition.html">Nutrition</a></li>
-            <li><a href="/goals.html">Goals</a></li>
-          </ul>
-        </div>
-        <div class="footer-links">
-          <h4>Resources</h4>
-          <ul>
-            <li><a href="/blog.html">Blog</a></li>
-            <li><a href="/exercise-library.html">Exercise Library</a></li>
-            <li><a href="/testimonials.html">Success Stories</a></li>
-            <li><a href="/membership.html">Membership</a></li>
-          </ul>
-        </div>
-        <div class="footer-links">
-          <h4>Company</h4>
-          <ul>
-            <li><a href="/contact.html">Contact Us</a></li>
-            <li><a href="/booking.html">Book a Session</a></li>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2026 FitTrack. All rights reserved. Built with <i class="fas fa-heart" style="color:#ff6b35"></i> for fitness enthusiasts.</p>
-      </div>
+
+      <p>&copy; 2026 FitTrack. All rights reserved.</p>
+
     </div>
   </footer>
 
-  <script src="/main.js"></script>
+  <!-- ✅ FIXED JS PATH -->
+  <script src="/js/main.js"></script>
 </body>
 </html>
